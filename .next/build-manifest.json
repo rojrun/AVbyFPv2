@@ -31,10 +31,10 @@
       "static/chunks/webpack.js",
       "static/chunks/pages/_error.js"
     ],
-    "/annotated-layout": [
+    "/contact": [
       "static/chunks/main.js",
       "static/chunks/webpack.js",
-      "static/chunks/pages/annotated-layout.js"
+      "static/chunks/pages/contact.js"
     ]
   },
   "ampFirstPages": []
