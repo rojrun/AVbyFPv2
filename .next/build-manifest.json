@@ -31,10 +31,15 @@
       "static/chunks/webpack.js",
       "static/chunks/pages/_error.js"
     ],
-    "/contact": [
+    "/edit-products": [
       "static/chunks/main.js",
       "static/chunks/webpack.js",
-      "static/chunks/pages/contact.js"
+      "static/chunks/pages/edit-products.js"
+    ],
+    "/microphones": [
+      "static/chunks/main.js",
+      "static/chunks/webpack.js",
+      "static/chunks/pages/microphones.js"
     ]
   },
   "ampFirstPages": []

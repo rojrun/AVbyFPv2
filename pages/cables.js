@@ -16,14 +16,7 @@ class Cables extends React.Component {
   static contextType = Context;
 
   render() {
-    const app = this.context;
-    const redirectToProduct = () => {
-      const redirect = Redirect.create(app);
-      redirect.dispatch(
-        Redirect.Action.APP,
-        '/cables',
-      );
-    };
+    
   
     return (
       <h1>Cables</h1>

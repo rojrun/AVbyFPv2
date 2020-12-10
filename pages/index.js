@@ -1,25 +1,79 @@
 import React from 'react';
-import {EmptyState, Layout, Page, Button, ButtonGroup, DisplayText} from '@shopify/polaris';
+import {Card, EmptyState, Layout, Page, Button, ButtonGroup, DisplayText, Link} from '@shopify/polaris';
 import {ResourcePicker, TitleBar} from '@shopify/app-bridge-react';
 import store from 'store-js';
 import ResourceListWithProducts from '../components/ResourceList';
+import {Redirect} from '@shopify/app-bridge/actions';
+import {Context} from '@shopify/app-bridge-react';
 
 // const img = 'https://cdn.shopify.com/s/files/1/0757/9955/files/empty-state.svg';
 const img = '../images/AVbyFPLogo_Horizontal_360x.png';
 
-const Index = () => (
-  <Page title="Product Search">
-    <Layout>
-      <ButtonGroup>
-        <Button
-          url="/cables">Cables</Button>
-        <Button>Headphones</Button>
-        <Button>In-ear monitor</Button>
-        <Button>Microphones</Button>
-      </ButtonGroup>
-    </Layout>
-  </Page>
-);
+class Index extends React.Component {
+  static contextType = Context;
+
+  render() {
+    const app = this.context;
+
+    const redirectToCables = () => {
+      const redirect = Redirect.create(app);
+      redirect.dispatch(
+        Redirect.Action.APP,
+        '/cables',
+      );   
+    };
+
+    const redirectToHeadphones = () => {
+      const redirect = Redirect.create(app);
+      redirect.dispatch(
+        Redirect.Action.APP,
+        '/headphones',
+      );   
+    };
+
+    const redirectToInearMonitors = () => {
+      const redirect = Redirect.create(app);
+      redirect.dispatch(
+        Redirect.Action.APP,
+        '/in-ear_monitors',
+      );   
+    };
+
+    const redirectToMicrophones = () => {
+      const redirect = Redirect.create(app);
+      redirect.dispatch(
+        Redirect.Action.APP,
+        '/microphones',
+      );   
+    };
+  
+    return (
+      <Page fullWidth title="Product Search">
+      <Layout>
+        <Layout.Section>
+          <Card title="Cables" sectioned>
+            <Link onClick={() => {redirectToCables();}}>Cables</Link>
+          </Card>
+        </Layout.Section>
+        <Layout.Section>
+          <Card title="Headphones" sectioned>
+            <Link onClick={() => {redirectToHeadphones();}}>Headphones</Link>
+          </Card>
+        </Layout.Section>
+        <Layout.Section>
+          <Card title="In-ear Monitors" sectioned>
+            <Link onClick={() => {redirectToInearMonitors();}}>In-ear monitors</Link>
+          </Card>
+        </Layout.Section>
+        <Layout.Section>
+          <Card title="Microphones" sectioned>
+            <Link onClick={() => {redirectToMicrophones();}}>Microphones</Link>
+          </Card>
+        </Layout.Section>
+      </Layout>
+    </Page>
+    );
+  }  
 
 
 // class Index extends React.Component {
@@ -51,7 +105,7 @@ const Index = () => (
 //               content: 'Select products',
 //               onAction: () => this.setState({open: true}),
 //             }}
-//             // image={img}
+//             image={img}
 //           >
 //             <p>Select products to change their price temporarily.</p>
 //           </EmptyState>  
@@ -68,6 +122,6 @@ const Index = () => (
 //     this.setState({open: false})
 //     store.set('ids', idsFromResources);
 //   };
-// }
+}
 
 export default Index;
