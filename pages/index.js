@@ -2,7 +2,7 @@ import React from 'react';
 import {Card, EmptyState, Layout, Page, Button, ButtonGroup, DisplayText, Link} from '@shopify/polaris';
 import {ResourcePicker, TitleBar} from '@shopify/app-bridge-react';
 import store from 'store-js';
-import ResourceListWithProducts from '../components/ResourceList';
+// import ResourceListWithProducts from '../components/ResourceList';
 import {Redirect} from '@shopify/app-bridge/actions';
 import {Context} from '@shopify/app-bridge-react';
 
@@ -15,27 +15,11 @@ class Index extends React.Component {
   render() {
     const app = this.context;
 
-    const redirectToCables = () => {
-      const redirect = Redirect.create(app);
-      redirect.dispatch(
-        Redirect.Action.APP,
-        '/cables',
-      );   
-    };
-
     const redirectToHeadphones = () => {
       const redirect = Redirect.create(app);
       redirect.dispatch(
         Redirect.Action.APP,
         '/headphones',
-      );   
-    };
-
-    const redirectToInearMonitors = () => {
-      const redirect = Redirect.create(app);
-      redirect.dispatch(
-        Redirect.Action.APP,
-        '/in-ear_monitors',
       );   
     };
 
@@ -51,18 +35,8 @@ class Index extends React.Component {
       <Page fullWidth title="Product Search">
       <Layout>
         <Layout.Section>
-          <Card title="Cables" sectioned>
-            <Link onClick={() => {redirectToCables();}}>Cables</Link>
-          </Card>
-        </Layout.Section>
-        <Layout.Section>
           <Card title="Headphones" sectioned>
             <Link onClick={() => {redirectToHeadphones();}}>Headphones</Link>
-          </Card>
-        </Layout.Section>
-        <Layout.Section>
-          <Card title="In-ear Monitors" sectioned>
-            <Link onClick={() => {redirectToInearMonitors();}}>In-ear monitors</Link>
           </Card>
         </Layout.Section>
         <Layout.Section>
