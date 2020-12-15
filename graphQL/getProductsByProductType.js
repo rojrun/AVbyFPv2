@@ -4,7 +4,7 @@ import gql from 'graphql-tag';
 
 const GET_PRODUCTS_BY_PRODUCT_TYPE = gql`
   query getProductType($product_type: String ) {
-    products(first: 10, query: $product_type) {
+    products(first: 20, query: $product_type) {
       edges {
         node {
           id

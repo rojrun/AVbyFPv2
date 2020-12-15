@@ -33,19 +33,19 @@ class Index extends React.Component {
   
     return (
       <Page fullWidth title="Product Search">
-      <Layout>
-        <Layout.Section>
-          <Card title="Headphones" sectioned>
-            <Link onClick={() => {redirectToHeadphones();}}>Headphones</Link>
-          </Card>
-        </Layout.Section>
-        <Layout.Section>
-          <Card title="Microphones" sectioned>
-            <Link onClick={() => {redirectToMicrophones();}}>Microphones</Link>
-          </Card>
-        </Layout.Section>
-      </Layout>
-    </Page>
+        <Layout>
+          <Layout.Section>
+            <Card title="Headphones" sectioned>
+              <Link onClick={() => {redirectToHeadphones();}}>Headphones</Link>
+            </Card>
+          </Layout.Section>
+          <Layout.Section>
+            <Card title="Microphones" sectioned>
+              <Link onClick={() => {redirectToMicrophones();}}>Microphones</Link>
+            </Card>
+          </Layout.Section>
+        </Layout>
+      </Page>
     );
   }  
 
