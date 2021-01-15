@@ -1,9 +1,11 @@
 import React from 'react';
 import {Card, EmptyState, Layout, Page, Button, ButtonGroup, DisplayText, Link} from '@shopify/polaris';
+import {Query} from 'react-apollo';
 import {ResourcePicker, TitleBar} from '@shopify/app-bridge-react';
 import store from 'store-js';
 import {Redirect} from '@shopify/app-bridge/actions';
 import {Context} from '@shopify/app-bridge-react';
+import Products from './products.js';
 
 
 // const img = 'https://cdn.shopify.com/s/files/1/0757/9955/files/empty-state.svg';
@@ -11,23 +13,15 @@ const img = '../images/AVbyFPLogo_Horizontal_360x.png';
 
 class Index extends React.Component {
   static contextType = Context;
-
+ 
   render() {
     const app = this.context;
     
-    const redirectToHeadphones = () => {
+    const redirectToProducts = () => {
       const redirect = Redirect.create(app);
       redirect.dispatch(
         Redirect.Action.APP,
-        '/headphones',
-      );   
-    };
-
-    const redirectToMicrophones = () => {
-      const redirect = Redirect.create(app);
-      redirect.dispatch(
-        Redirect.Action.APP,
-        '/microphones',
+        '/products',
       );   
     };
   
@@ -36,19 +30,34 @@ class Index extends React.Component {
         <Layout>
           <Layout.Section>
             <Card sectioned>
-              <Link onClick={() => {redirectToHeadphones();}}>Headphones</Link>
+              <Link 
+                onClick={() => {
+                  store.set('product_type', {product_type: 'headphone'});
+                  redirectToProducts();
+                }}
+              >
+                Headphones
+              </Link>
             </Card>
           </Layout.Section>
           <Layout.Section>
             <Card sectioned>
-              <Link onClick={() => {redirectToMicrophones();}}>Microphones</Link>
+            <Link 
+                onClick={() => {
+                  store.set('product_type', {product_type: 'microphone'});
+                  redirectToProducts();
+                }}
+              >
+                Microphones
+              </Link>
             </Card>
           </Layout.Section>
         </Layout>
       </Page>
     );
   }  
-
+}
+export default Index;
 
 // class Index extends React.Component {
 //   state = {open: false};
@@ -96,6 +105,3 @@ class Index extends React.Component {
 //     this.setState({open: false});
 //     store.set('ids', idsFromResources);
 //   };
-}
-
-export default Index;
