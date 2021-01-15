@@ -15,6 +15,7 @@ class Microphones extends React.Component {
   }
 
   render() { 
+    
     return (
       <Page title="Microphones" fullWidth>
         <Query query={GET_PRODUCTS_BY_PRODUCT_TYPE} variables={{product_type: "microphone"}}>
@@ -22,55 +23,82 @@ class Microphones extends React.Component {
               if (loading) return <div>Loading...</div>;
               if (error) return <div>{error.message}</div>;
               
-              const productResults = data.products.edges;       
-                return (
-                  <Layout>
-                    <Layout.Section primary>
-                      <Card title="Results">
-                        <Card.Section title="Vendors">
-                          <ResourceList
-                            resourceName={{singular: 'product', plural: 'products'}}
-                            items={productResults}
-                            renderItem={(item) => {
-                              const media = <Thumbnail
-                                source={item.node.images.edges[0].node.originalSrc}
-                                size="small"
-                                alt={item.node.images.edges[0].node.altText}
-                              />  
-                              return (
-                                <ResourceItem
-                                  id={item.node.id}
-                                  media={media}  
-                                >
-                                  <h3>
-                                    <TextStyle variation="strong">{item.node.title}</TextStyle>
-                                  </h3>
-                                  <p>${item.node.variants.edges[0].node.price}</p>
-                                </ResourceItem>
-                              );
-                            }}
-                            showHeader
-                            totalItemsCount={productResults.length}
-                          />  
-                        </Card.Section>      
-                      </Card>
-                      {/* <ProductResults id={product.node.id} image={product.node.images} title={product.node.title} variants={product.node.variants} vendor={product.node.vendor}/> */}
-                    </Layout.Section>
-                    <Layout.Section secondary>
-                      <Card title="Filters">
-                        <Card.Section>
-                          <p>filter</p>
-                        </Card.Section>
-                      </Card>
-                    </Layout.Section>
-                    <Layout.Section fullWidth>
-                      <Card title="Product Details">
-                        <p>details</p>
-                      </Card>
-                    </Layout.Section>
-                  </Layout>  
-                );            
-              // });
+              const productResults = data.products.edges; 
+              // const vendors = data.products.reduce((allProducts, current) => {
+              //   return allProducts.includes(current.vendor) ? allProducts : allProducts.concat([current.vendor]);
+              // }, []);
+              // console.log("vendors: ", vendors);  
+              // return (
+              //   <div>
+              //     {
+              //       vendors.map((vendor) => {
+              //         const products = data.products.filter(prod => prod.vendor === vendor);
+              //         const firstProduct = products[0];
+              //         return (
+              //           <div>
+              //             <section key={firstProduct.id}>
+              //               <div>
+              //                 <h1>{firstProduct.vendor}</h1>
+              //               </div>
+              //               <div>
+              //                 {products.map(product => {
+
+              //                 })}
+              //               </div>
+              //             </section>
+              //           </div> 
+              //         );
+              //       })
+              //     }
+              //   </div>
+              // );    
+              return (
+                <Layout>
+                  <Layout.Section primary>
+                    <Card title="Results">
+                      <Card.Section>
+                        <ResourceList
+                          resourceName={{singular: 'product', plural: 'products'}}
+                          items={productResults}
+                          renderItem={(item) => {
+                            const media = <Thumbnail
+                              source={item.node.images.edges[0].node.originalSrc}
+                              size="small"
+                              alt={item.node.images.edges[0].node.altText}
+                            />  
+                            return (
+                              <ResourceItem
+                                id={item.node.id}
+                                media={media}  
+                              >
+                                <h3>
+                                  <TextStyle variation="strong">{item.node.title}</TextStyle>
+                                </h3>
+                                <p>${item.node.variants.edges[0].node.price}</p>
+                              </ResourceItem>
+                            );
+                          }}
+                          showHeader
+                          totalItemsCount={productResults.length}
+                        />  
+                      </Card.Section>      
+                    </Card>
+                    {/* <ProductResults id={product.node.id} image={product.node.images} title={product.node.title} variants={product.node.variants} vendor={product.node.vendor}/> */}
+                  </Layout.Section>
+                  <Layout.Section secondary>
+                    <Card title="Filters">
+                      <Card.Section>
+                        <p>filter</p>
+                      </Card.Section>
+                    </Card>
+                  </Layout.Section>
+                  <Layout.Section fullWidth>
+                    <Card title="Product Details">
+                      <p>details</p>
+                    </Card>
+                  </Layout.Section>
+                </Layout>  
+              );            
             }}
         </Query>
       </Page>    
