@@ -16,7 +16,7 @@ class Index extends React.Component {
  
   render() {
     const app = this.context;
-    
+    store.clearAll();
     const redirectToProducts = () => {
       const redirect = Redirect.create(app);
       redirect.dispatch(
@@ -32,7 +32,8 @@ class Index extends React.Component {
             <Card sectioned>
               <Link 
                 onClick={() => {
-                  store.set('product_type', {product_type: 'headphone'});
+                  store.remove('productType');
+                  store.set('productType', 'headphone');
                   redirectToProducts();
                 }}
               >
@@ -42,9 +43,10 @@ class Index extends React.Component {
           </Layout.Section>
           <Layout.Section>
             <Card sectioned>
-            <Link 
+              <Link 
                 onClick={() => {
-                  store.set('product_type', {product_type: 'microphone'});
+                  store.remove('productType');
+                  store.set('productType', 'microphone');
                   redirectToProducts();
                 }}
               >
