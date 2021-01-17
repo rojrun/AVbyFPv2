@@ -16,7 +16,6 @@ class Index extends React.Component {
  
   render() {
     const app = this.context;
-    store.clearAll();
     const redirectToProducts = () => {
       const redirect = Redirect.create(app);
       redirect.dispatch(

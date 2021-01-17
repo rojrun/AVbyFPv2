@@ -6,6 +6,7 @@ import {Redirect} from '@shopify/app-bridge/actions';
 import {Context} from '@shopify/app-bridge-react';
 import GET_PRODUCTS_BY_PRODUCT_TYPE from '../graphQL/getProductsByProductType.js';
 import ProductResults from '../components/productResults.js';
+import ProductDetails from '../components/productDetails.js';
 
 class Products extends React.Component {
   // static contextType = Context;
@@ -32,18 +33,16 @@ class Products extends React.Component {
                   <Layout.Section primary>
                     <ProductResults filteredProductResults={filteredProductResults} vendors={vendors} />
                   </Layout.Section>
-                  <Layout.Section secondary>
+                  {/* <Layout.Section secondary>
                     <Card title="Filters">
                       <Card.Section>
                         <p>filter</p>
                       </Card.Section>
                     </Card>
-                  </Layout.Section>
-                  <Layout.Section fullWidth>
-                    <Card title="Product Details">
-                      <p>details</p>
-                    </Card>
-                  </Layout.Section>
+                  </Layout.Section> */}
+                  {/* <Layout.Section fullWidth>
+                    <ProductDetails filteredProductResults={filteredProductResults}/>
+                  </Layout.Section> */}
                 </Layout>  
               );            
             }}
