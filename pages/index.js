@@ -5,11 +5,6 @@ import {ResourcePicker, TitleBar} from '@shopify/app-bridge-react';
 import store from 'store-js';
 import {Redirect} from '@shopify/app-bridge/actions';
 import {Context} from '@shopify/app-bridge-react';
-import Products from './products.js';
-
-
-// const img = 'https://cdn.shopify.com/s/files/1/0757/9955/files/empty-state.svg';
-const img = '../images/AVbyFPLogo_Horizontal_360x.png';
 
 class Index extends React.Component {
   static contextType = Context;
@@ -23,7 +18,7 @@ class Index extends React.Component {
         '/products',
       );   
     };
-  
+    
     return (
       <Page fullWidth title="Product Search">
         <Layout>
