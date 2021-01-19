@@ -29,6 +29,7 @@ class Products extends React.Component {
             const vendorKeys = filteredProductResults.reduce((allProducts, current) => {
               return allProducts.includes(current.node.vendor) ? allProducts : allProducts.concat([current.node.vendor]);
             }, []);
+            vendorKeys.sort();
             
             const sortedProductsObj = {};
             vendorKeys.map((vendor) => {
