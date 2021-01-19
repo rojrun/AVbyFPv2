@@ -8,32 +8,38 @@ import GET_PRODUCTS_BY_PRODUCT_TYPE from '../graphQL/getProductsByProductType.js
 import ProductResults from '../components/productResults.js';
 
 class Products extends React.Component {
-  static contextType = Context;
+  // static contextType = Context;
   
   render() {
     const productTypeVar = store.get('productType');
     const productTypeObj = {};
     productTypeObj.product_type = productTypeVar;
-   
+    
     return (
       <Page title={`${(productTypeVar + 's').toUpperCase()}`} fullWidth> 
         <Query query={GET_PRODUCTS_BY_PRODUCT_TYPE} variables={productTypeObj}>
-            {({data, loading, error}) => {
-              if (loading) return <div>Loading...</div>;
-              if (error) return <div>{error.message}</div>;
-              const filteredProductResults = (data.products.edges).filter((product) => product.node.totalInventory > 0);
-              console.log("filteredProductResults: ", filteredProductResults);   
-              
-              const vendors = filteredProductResults.reduce((allProducts, current) => {
-                console.log("allProducts: ", allProducts);
-                console.log("current: ", current);
-                return allProducts.includes(current.node.vendor) ? allProducts : allProducts.concat([current.node.vendor]);
-              }, []);
-              console.log("vendors: ", vendors);  
-              return (
-                <ProductResults filteredProductResults={filteredProductResults} vendors={vendors} />
-              );            
-            }}
+          {({data, loading, error}) => {
+            if (loading) return <div>Loading...</div>;
+            if (error) return <div>{error.message}</div>;
+
+            // Filter out product with low inventory
+            const filteredProductResults = (data.products.edges).filter((product) => product.node.totalInventory > 0);
+            
+            // Searches for vendor to use as keys in sortedProductsObj
+            const vendorKeys = filteredProductResults.reduce((allProducts, current) => {
+              return allProducts.includes(current.node.vendor) ? allProducts : allProducts.concat([current.node.vendor]);
+            }, []);
+            
+            const sortedProductsObj = {};
+            vendorKeys.map((vendor) => {
+              const products = filteredProductResults.filter((product) => product.node.vendor === vendor);
+              sortedProductsObj[vendor] = products;
+            });
+
+            return (
+              <ProductResults sortedProductsObj={sortedProductsObj} filteredProductResults={filteredProductResults}/>
+            );    
+          }}
         </Query>
       </Page>    
     );  
