@@ -16,7 +16,7 @@ class ProductResults extends React.Component {
     return (
       <div>
         <Layout>
-          <Layout.Section primary>
+          <Layout.Section secondary>
             <Card title={`Results | Showing ${this.props.filteredProductResults.length} products`}>
               {
                 Object.entries(this.props.sortedProductsObj).map(([key, values]) => {
@@ -52,7 +52,7 @@ class ProductResults extends React.Component {
               }      
             </Card>
           </Layout.Section>
-          <ProductDetails />
+          <ProductDetails product={this.props.sortedProductsObj[Object.keys(this.props.sortedProductsObj)[0]][0]} />
         </Layout>
       </div>
     );

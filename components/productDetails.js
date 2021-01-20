@@ -1,5 +1,5 @@
 import React from 'react';
-import {Card, Layout} from '@shopify/polaris';
+import {MediaCard, Layout} from '@shopify/polaris';
 
 // Child component from Project Page. Displays product information when product is clicked from ProductResults.js
 class ProductDetails extends React.Component {
@@ -8,14 +8,12 @@ class ProductDetails extends React.Component {
   }
 
   render() {
-    // console.log("productDetails props: ", this.props);
+    console.log("productDetails props: ", this.props.product);
     return (
-      <Layout.Section secondary>
-        <Card title="Product Details">
-          <Card.Section>
-
-          </Card.Section>
-        </Card>
+      <Layout.Section primary>
+        <MediaCard title={this.props.product.node.title}>
+          
+        </MediaCard>
       </Layout.Section>
     );
   }

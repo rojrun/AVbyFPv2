@@ -8,8 +8,12 @@ const GET_PRODUCTS_BY_PRODUCT_TYPE = gql`
         node {
           id
           title
-          handle
-          images(first: 1) {
+          description
+          featuredImage {
+            id
+          }
+          hasOnlyDefaultVariant
+          images(first: 10) {
             edges {
               node {
                 originalSrc
@@ -17,15 +21,23 @@ const GET_PRODUCTS_BY_PRODUCT_TYPE = gql`
               }
             }
           }
+          mediaCount
           productType
+          status
+          tags
           totalInventory
+          totalVariants
           vendor
           variants(first: 5) {
             edges {
               node {
+                displayName
+                image {
+                  id
+                }
                 price
-                id
-                inventoryPolicy
+                id   
+                title
               }
             }
           }
