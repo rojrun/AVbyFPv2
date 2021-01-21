@@ -26,7 +26,7 @@ class ProductResults extends React.Component {
                         resourceName={{singular: 'product', plural: 'products'}}
                         items={values}
                         renderItem={(value) => {
-                          const {title, variants} = value.node;
+                          const {title} = value.node;
                           const media = <Thumbnail
                             source={value.node.images.edges[0].node.originalSrc}
                             size="small"
@@ -52,7 +52,10 @@ class ProductResults extends React.Component {
               }      
             </Card>
           </Layout.Section>
-          <ProductDetails product={this.props.sortedProductsObj[Object.keys(this.props.sortedProductsObj)[0]][0]} />
+          <ProductDetails 
+            product={this.props.sortedProductsObj[Object.keys(this.props.sortedProductsObj)[0]][0]} 
+            handleProductDetails={this.handleProductDetails}
+          />
         </Layout>
       </div>
     );
