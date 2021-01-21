@@ -8,7 +8,7 @@ const GET_PRODUCTS_BY_PRODUCT_TYPE = gql`
         node {
           id
           title
-          description
+          descriptionHtml
           featuredImage {
             id
           }
