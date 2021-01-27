@@ -12,11 +12,10 @@ class ProductResults extends React.Component {
   }
 
   render() {
-    console.log("productResults props: ", this.props.productsList);
     return (
       <Layout>
         <Layout.Section secondary>
-          <Card title={`Results | Showing ${this.props.filteredProductResults.length} products`}>
+          <Card title={`Results | Showing ${this.props.originalDataListCount} products`}>
             {
               Object.entries(this.props.productsList).map(([key, values]) => {
                 return (           
@@ -24,6 +23,7 @@ class ProductResults extends React.Component {
                     <ResourceList
                       resourceName={{singular: 'product', plural: 'products'}}
                       items={values}
+                      totalItemsCount={this.props.originalDataListCount}
                       renderItem={(value) => {
                         const {title} = value.node;
                         const media = <Thumbnail

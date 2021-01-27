@@ -9,9 +9,6 @@ const GET_PRODUCTS_BY_PRODUCT_TYPE = gql`
           id
           title
           descriptionHtml
-          featuredImage {
-            id
-          }
           hasOnlyDefaultVariant
           images(first: 10) {
             edges {
