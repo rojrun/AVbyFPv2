@@ -8,12 +8,12 @@ import ProductDetails from '../components/productDetails.js';
 
 class Products extends React.Component {
   state = {
-    isFirstRender: true,
     productsList: {},
-    productToDisplay: (this.state.productsList[Object.keys(this.props.productsList)[0]])[0]
+    productToDisplay: {},
+    isFirstRender: true
   }
 
-  restructureData = data => {
+  restructureData(data) {
      // Searches for vendor to use as keys in productsList
      const vendorKeys = data.products.edges.reduce((allProducts, current) => {
       return allProducts.includes(current.node.vendor) ? allProducts : allProducts.concat([current.node.vendor]);
@@ -28,7 +28,15 @@ class Products extends React.Component {
     });
     
     if (this.state.isFirstRender) {
-      this.setState({productsList, isFirstRender: false});
+      this.setState({
+        productsList, 
+        isFirstRender: false,
+        // productToDisplay: (productsList[Object.keys(productsList)[0]])[0]
+      }, () => {
+        this.setState({
+          productToDisplay: (this.state.productsList[Object.keys(this.state.productsList)[0]])[0]
+        });
+      });
     }
   }
 
@@ -38,7 +46,11 @@ class Products extends React.Component {
     productTypeObj.product_type = `product_type:${productType} status:ACTIVE inventory_total:>0`;
     
     return (
-      <Query query={GET_PRODUCTS_BY_PRODUCT_TYPE} variables={productTypeObj} onCompleted={data => this.restructureData(data)}>
+      <Query 
+        query={GET_PRODUCTS_BY_PRODUCT_TYPE}
+        variables={productTypeObj}
+        onCompleted={(data) => { console.log("data received");this.restructureData(data)}}
+      >
         {({data, loading, error}) => {
           if (loading) return <div>Loading...</div>;
           if (error) return <div>{error.message}</div>;
@@ -46,7 +58,8 @@ class Products extends React.Component {
           return (
             <Page title={`${(productType + 's').toUpperCase()}`} fullWidth> 
               <ProductResults productsList={this.state.productsList} originalDataListCount={data.products.edges.length}/>
-              <ProductDetails productsList={this.state.productsList} productToDisplay={this.state.productToDisplay}/>
+              {/* {console.log("productResults rendered. productToDisplay: ", this.state.productToDisplay)} */}
+              {/* <ProductDetails productToDisplay={this.state.productToDisplay} wait={10000}/> */}
             </Page>
           );    
         }}
