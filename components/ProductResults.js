@@ -7,7 +7,7 @@ class ProductResults extends React.Component {
     super(props);
   }
 
-  handleProductDetails = (product) => {
+  handleProductDetails(product) {
     console.log("clicked", product);
   }
 
