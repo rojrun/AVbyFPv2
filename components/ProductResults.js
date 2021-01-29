@@ -7,12 +7,8 @@ class ProductResults extends React.Component {
     super(props);
   }
 
-  handleProductDetails(product) {
-    console.log("clicked", product);
-  }
-
   render() {
-    return (
+    return ( 
       <Layout>
         <Layout.Section secondary>
           <Card title={`Results | Showing ${this.props.originalDataListCount} products`}>
@@ -37,7 +33,7 @@ class ProductResults extends React.Component {
                             key={value.node.id}
                             media={media}
                             accessibilityLabel={`View details for ${title}`}  
-                            onClick={() => this.handleProductDetails(value)}
+                            onClick={() => this.props.handleProductDetails(value)}
                           >
                             <TextStyle variation="strong">{title}</TextStyle>
                             <p>${value.node.variants.edges[0].node.price}</p>
