@@ -5,20 +5,30 @@ import {Button, ButtonGroup, Card, Layout, Stack, TextStyle, Thumbnail} from '@s
 class ProductDetails extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {visibility: "hidden"};
+    console.log("productToDisplay prop: ",this.props.productToDisplay);
   }
 
-  componentDidUpdate() {
-    setTimeout(function() {
-      this.setState({visibility: ""});
-    }, this.props.wait);
-  }
+  // static getDerivedStateFromProps(nextProps, prevState) {
+  //   console.log("nextProps: ", nextProps.productToDisplay);
+  //   console.log("prevState: ", prevState.productToDisplay);
+  //   if (nextProps.productToDisplay !== prevState.productToDisplay) {
+  //     return {
+  //       productToDisplay: nextProps.productToDisplay,
+  //     };
+  //   }
+  //   return null;
+  // }
+
+  // componentDidUpdate(prevProps, prevState) {
+  //   if (this.props.productToDisplay !== prevProps.productToDisplay) {
+  //     console.log("display item state has changed");
+  //   }
+  // }
 
   render() {
-    console.log("productToDisplay: ", this.props.productToDisplay);
-    
-    return (
-      <Layout.Section primary style={this.state.visibility}>
+    console.log("productToDisplay prop: ", this.props.productToDisplay);
+    return this.props.productToDisplay && (
+      <Layout.Section primary>
         <Card title={this.props.productToDisplay.node.title}>
           <Card.Section title="Images">
             {
@@ -34,7 +44,6 @@ class ProductDetails extends React.Component {
                   )
                 })
               : this.props.productToDisplay.node.variants.edges.map((variant) => {
-                
                 return (
                   <div>{variant.node.title}</div>
                 )
