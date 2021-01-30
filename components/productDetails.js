@@ -5,29 +5,49 @@ import {Button, ButtonGroup, Card, Layout, Stack, TextStyle, Thumbnail} from '@s
 class ProductDetails extends React.Component {
   constructor(props) {
     super(props);
-    console.log("productToDisplay prop: ",this.props.productToDisplay);
+    this.state = {
+      productToDisplay: {}
+    }
+    console.log("productDetails props: ", this.props.productToDisplay);
   }
 
-  // static getDerivedStateFromProps(nextProps, prevState) {
-  //   console.log("nextProps: ", nextProps.productToDisplay);
-  //   console.log("prevState: ", prevState.productToDisplay);
-  //   if (nextProps.productToDisplay !== prevState.productToDisplay) {
+  // static getDerivedStateFromProps(props, state) {
+  //   console.log("props: ", props.productToDisplay);
+  //   console.log("state: ", state.productToDisplay);
+  //   if (props.productToDisplay !== state.productToDisplay) {
+  //     console.log("if statement true");
   //     return {
-  //       productToDisplay: nextProps.productToDisplay,
+  //       productToDisplay: props.productToDisplay
   //     };
   //   }
+  //   console.log("if statement false");
   //   return null;
   // }
 
-  // componentDidUpdate(prevProps, prevState) {
-  //   if (this.props.productToDisplay !== prevProps.productToDisplay) {
-  //     console.log("display item state has changed");
+  // shouldComponentUpdate(nextProps, nextState) {
+  //   console.log("nextProps: ", nextProps);
+  //   console.log("nextState: ", nextState);
+  //   if (nextProps.productToDisplay !== nextState.productToDisplay) {
+  //     console.log("shouldComponentUpdate true");
+  //     return true;
+  //   } else {
+  //     console.log("shouldComponentUpdate false");
+  //     return false;
   //   }
   // }
 
+  componentDidMount() {
+    this.setState({productToDisplay: this.props.productToDisplay},
+      () => {console.log("productToDisplay state: ", this.state.productToDisplay)});
+  }
+
   render() {
-    console.log("productToDisplay prop: ", this.props.productToDisplay);
-    return this.props.productToDisplay && (
+    console.log("productToDisplay props: ", this.props.productToDisplay);
+    // return (
+    //   <h1>hi world</h1>
+    // );
+
+    return (
       <Layout.Section primary>
         <Card title={this.props.productToDisplay.node.title}>
           <Card.Section title="Images">

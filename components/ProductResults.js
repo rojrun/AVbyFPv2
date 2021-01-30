@@ -1,10 +1,49 @@
 import React from 'react';
 import {Card, Layout, ResourceItem, ResourceList, TextStyle, Thumbnail} from '@shopify/polaris';
+import ProductDetails from '../components/productDetails.js';
 
-// Child component from Project Page. Dynamically categorizes products into groups by vendor.
+// Child component from Project Page. Restructures raw data & dynamically categorizes products into groups by vendor.
 class ProductResults extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      productsList: {},
+      productToDisplay: {}
+    }
+  }
+
+  static getDerivedStateFromProps(props, state) {
+    if (props.data !== state.productsList) {
+      // Searches for vendor to use as keys in productsList
+      const vendorKeys = props.data.products.edges.reduce((allProducts, current) => {
+        return allProducts.includes(current.node.vendor) ? allProducts : allProducts.concat([current.node.vendor]);
+      }, []);
+      vendorKeys.sort();
+     
+      // Makes products array from vendor keys
+      const productsList = {};
+      vendorKeys.map((vendor) => {
+        const products = props.data.products.edges.filter((product) => product.node.vendor === vendor);
+        productsList[vendor] = products;
+      });
+      
+      return {
+        productsList
+      };
+    }
+    return null;
+  }
+
+  componentDidMount() {
+    this.setState({productToDisplay: (this.state.productsList[Object.keys(this.state.productsList)[0]])[0]})
+  }
+
+  handleProductDetails = (product) => {
+    this.setState({
+      productToDisplay: product
+    }, () => {
+      console.log("state after click: ", this.state.productToDisplay);
+    });
   }
 
   render() {
@@ -13,7 +52,7 @@ class ProductResults extends React.Component {
         <Layout.Section secondary>
           <Card title={`Results | Showing ${this.props.originalDataListCount} products`}>
             {
-              Object.entries(this.props.productsList).map(([key, values]) => {
+              Object.entries(this.state.productsList).map(([key, values]) => {
                 return (           
                   <Card.Section title={key} key={key}>
                     <ResourceList
@@ -32,8 +71,8 @@ class ProductResults extends React.Component {
                             id={value.node.id}
                             key={value.node.id}
                             media={media}
-                            accessibilityLabel={`View details for ${title}`}  
-                            onClick={() => this.props.handleProductDetails(value)}
+                            accessibilityLabel={`View details for ${title}`}
+                            onClick={() => this.handleProductDetails(value)}
                           >
                             <TextStyle variation="strong">{title}</TextStyle>
                             <p>${value.node.variants.edges[0].node.price}</p>
@@ -47,6 +86,7 @@ class ProductResults extends React.Component {
             }      
           </Card>
         </Layout.Section>
+        <ProductDetails productToDisplay={this.state.productToDisplay}/>
       </Layout>   
     );
   }
