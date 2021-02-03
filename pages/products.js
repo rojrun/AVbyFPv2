@@ -10,9 +10,9 @@ const Products = () => {
   const productTypeObj = {};
   productTypeObj.product_type = `product_type:${productType} status:ACTIVE inventory_total:>0`;
   return (
-    <Query query={GET_PRODUCTS_BY_PRODUCT_TYPE} variables={productTypeObj}>
+    <Query query={GET_PRODUCTS_BY_PRODUCT_TYPE} variables={productTypeObj} ssr={false}>
       {({data, loading, error}) => {
-        if (loading) return <Card>Loading ...</Card>;
+        if (loading) return <Card title="Loading ..."></Card>;
         if (error) return <Card>{error.message}</Card>;   
         return (
           <Page title={`${(productType + 's').toUpperCase()}`} fullWidth> 

@@ -8,7 +8,8 @@ class ProductResults extends React.Component {
     super(props);
     this.state = {
       productsList: {},
-      productToDisplay: {}
+      productToDisplay: {},
+      productKey: ""
     }
   }
 
@@ -35,14 +36,16 @@ class ProductResults extends React.Component {
   }
 
   componentDidMount() {
-    this.setState({productToDisplay: (this.state.productsList[Object.keys(this.state.productsList)[0]])[0]})
+    this.setState({
+      productToDisplay: (this.state.productsList[Object.keys(this.state.productsList)[0]])[0],
+      productKey: (this.state.productsList[Object.keys(this.state.productsList)[0]])[0].node.id
+    });  
   }
 
-  handleProductDetails = (product) => {
+  handleProductDetails = (key, product) => {
     this.setState({
-      productToDisplay: product
-    }, () => {
-      console.log("state after click: ", this.state.productToDisplay);
+      productToDisplay: product,
+      productKey: key
     });
   }
 
@@ -60,7 +63,7 @@ class ProductResults extends React.Component {
                       items={values}
                       totalItemsCount={this.props.originalDataListCount}
                       renderItem={(value) => {
-                        const {title} = value.node;
+                        const {id, title} = value.node;
                         const media = <Thumbnail
                           source={value.node.images.edges[0].node.originalSrc}
                           size="small"
@@ -68,11 +71,11 @@ class ProductResults extends React.Component {
                         />  
                         return (
                           <ResourceItem
-                            id={value.node.id}
-                            key={value.node.id}
+                            id={id}
+                            key={id}
                             media={media}
                             accessibilityLabel={`View details for ${title}`}
-                            onClick={() => this.handleProductDetails(value)}
+                            onClick={() => this.handleProductDetails(id, value)}
                           >
                             <TextStyle variation="strong">{title}</TextStyle>
                             <p>${value.node.variants.edges[0].node.price}</p>
@@ -86,7 +89,7 @@ class ProductResults extends React.Component {
             }      
           </Card>
         </Layout.Section>
-        <ProductDetails productToDisplay={this.state.productToDisplay}/>
+        {this.state.productToDisplay && this.state.productKey ? <ProductDetails productKey={this.state.productKey} productToDisplay={this.state.productToDisplay}/> : null}
       </Layout>   
     );
   }
