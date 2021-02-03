@@ -35,6 +35,8 @@ const GET_PRODUCTS_BY_PRODUCT_TYPE = gql`
                 price
                 id   
                 title
+                inventoryPolicy
+                inventoryQuantity
               }
             }
           }
