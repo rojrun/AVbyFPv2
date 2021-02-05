@@ -17,14 +17,18 @@ class ProductResults extends React.Component {
     if (props.data !== state.productsList) {
       // Searches for vendor to use as keys in productsList
       const vendorKeys = props.data.products.edges.reduce((allProducts, current) => {
-        return allProducts.includes(current.node.vendor) ? allProducts : allProducts.concat([current.node.vendor]);
+        return allProducts.includes(current.node.vendor) ? allProducts : allProducts.concat([current.node.vendor]).sort()
       }, []);
-      vendorKeys.sort();
-     
+      
       // Makes products array from vendor keys
       const productsList = {};
       vendorKeys.map((vendor) => {
-        const products = props.data.products.edges.filter((product) => product.node.vendor === vendor);
+        const products = props.data.products.edges.filter((product) => product.node.vendor === vendor)
+          .sort((first, second) => {
+            let a = first.node.title;
+            let b = second.node.title;
+            return a === b ? 0 : a > b ? 1 : -1;
+          });
         productsList[vendor] = products;
       });
       
@@ -89,7 +93,11 @@ class ProductResults extends React.Component {
             }      
           </Card>
         </Layout.Section>
-        {this.state.productToDisplay && this.state.productKey ? <ProductDetails productKey={this.state.productKey} productToDisplay={this.state.productToDisplay}/> : null}
+        {
+          this.state.productToDisplay && this.state.productKey 
+          ? <ProductDetails productToDisplay={this.state.productToDisplay}/> 
+          : <Card title="Loading..."></Card>
+        }
       </Layout>   
     );
   }
