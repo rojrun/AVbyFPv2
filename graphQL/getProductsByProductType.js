@@ -10,7 +10,7 @@ const GET_PRODUCTS_BY_PRODUCT_TYPE = gql`
           title
           descriptionHtml
           hasOnlyDefaultVariant
-          images(first: 10) {
+          images(first: 21) {
             edges {
               node {
                 originalSrc

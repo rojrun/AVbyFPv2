@@ -94,8 +94,8 @@ class ProductResults extends React.Component {
           </Card>
         </Layout.Section>
         {
-          this.state.productToDisplay && this.state.productKey 
-          ? <ProductDetails productToDisplay={this.state.productToDisplay}/> 
+          this.state.productToDisplay && this.state.productKey
+          ? <ProductDetails productToDisplay={this.state.productToDisplay} productKey={this.state.productKey}/> 
           : <Card title="Loading..."></Card>
         }
       </Layout>   
