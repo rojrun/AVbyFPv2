@@ -25,14 +25,15 @@ const Slideshow = (props) => {
       alignItems:"center"
     }}>
       <Button icon={ArrowLeftMinor} style={{position:"absolute !important", top:"50%", left:"0.5rem", width:"10rem !important", zIndex:"10", cursor:"pointer", userSelect:"none"}} onClick={prevSlide}></Button>
-      {props.images.map((image, index) => {
-        return (
-          <div className={index === current ? 'slide active' : 'slide'} key={index}>
-            {index === current && (
-              <img src={image.node.originalSrc}  style={{width: "100%"}}/>
-            )}
-          </div>
-        ); 
+      {
+        props.images.map((image, index) => {
+          return (
+            <div className={index === current ? 'slide active' : 'slide'} key={index}>
+              {index === current && (
+                <img src={image.node.originalSrc}  style={{width: "100%"}}/>
+              )}
+            </div>
+          ); 
         })
       }
       <Button icon={ArrowRightMinor} style={{position:"absolute !important", top:"50%", right:"0.5rem", width:"10rem !important", zIndex:"10", cursor:"pointer", userSelect:"none"}} onClick={nextSlide}></Button>
