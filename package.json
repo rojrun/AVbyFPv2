@@ -10,7 +10,7 @@
     "start": "NODE_ENV=production node server.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Roj Rungsisullatanont",
   "license": "ISC",
   "dependencies": {
     "@shopify/app-bridge-react": "^1.28.0",

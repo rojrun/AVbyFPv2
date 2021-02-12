@@ -9,7 +9,9 @@ class ProductResults extends React.Component {
     this.state = {
       productsList: {},
       productToDisplay: {},
-      productKey: ""
+      productKey: "",
+      productPrice: "",
+      productImages: []
     }
   }
 
@@ -31,7 +33,6 @@ class ProductResults extends React.Component {
           });
         productsList[vendor] = products;
       });
-      
       return {
         productsList
       };
@@ -40,10 +41,46 @@ class ProductResults extends React.Component {
   }
 
   componentDidMount() {
-    this.setState({
-      productToDisplay: (this.state.productsList[Object.keys(this.state.productsList)[0]])[0],
-      productKey: (this.state.productsList[Object.keys(this.state.productsList)[0]])[0].node.id
-    });  
+    console.log("productsList: ", this.state.productsList);
+    Object.entries(this.state.productsList).map(([key, value]) => {
+      console.log("key: ", key);
+      console.log("value: ", value);
+      value.map((item) => {
+        console.log({item});
+        if (item.node.hasOnlyDefaultVariant) {
+          console.log("doesn't have variant: ", item);
+          console.log("productKey: ", (item[Object.keys(item)[0]]));
+          this.setState({
+            // productToDisplay: (this.state.productsList[Object.keys(this.state.productsList)[0]])[0],
+            // productKey: (this.state.productsList[Object.keys(this.state.productsList)[0]])[0].node.id,
+            productToDisplay: item.node,
+            // productKey: (item[Object.keys(item)[0]])[0].node.id,
+            productPrice: item.node.variants.edges[0].node.price,
+            productImages: item.node.images.edges
+          });
+        } else {
+          const productVariants = item.node.variants.edges
+            .filter(variant => variant.node.inventoryQuantity > 0)
+            .reduce((productVariants, current) => {
+              return productVariants.concat([current.node.title]).sort()
+          }, []);
+          console.log("productVariants: ", productVariants);
+          const lowerCaseFirstVariant = productVariants[0].charAt(0).toLowerCase() + productVariants[0].slice(1);
+          console.log('lowerCaseFirstVariant: ', lowerCaseFirstVariant);
+          const images = item.node.images.edges.filter((image) => {
+            return image.node.altText === lowerCaseFirstVariant;
+          });
+          console.log("images: ", images);
+          const price = item.node.variants.edges.filter((variant) => {
+            return variant.node.title === productVariants[0];
+          })[0].node.price;
+          console.log("price: ", price);
+
+        }
+      });
+    });
+  
+      
   }
 
   handleProductDetails = (key, product) => {
@@ -60,6 +97,8 @@ class ProductResults extends React.Component {
           <Card title={`Results | Showing ${this.props.originalDataListCount} products`}>
             {
               Object.entries(this.state.productsList).map(([key, values]) => {
+                console.log("key: ", key);
+                console.log("values: ", values);
                 return (           
                   <Card.Section title={key} key={key}>
                     <ResourceList
