@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, ButtonGroup, Card, Layout, Stack} from '@shopify/polaris';
+import {Button, ButtonGroup, Card, Layout, Stack, TextStyle} from '@shopify/polaris';
 import Slideshow from '../components/slideshow.js';
 
 // Displays product information when product is clicked from ProductResults Component
@@ -7,66 +7,61 @@ class ProductDetails extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      variantButtons: [],
-      variantImages: []
+      productToDisplay: {},
+      variants: [],
+      images: [],
+      price: ""
     }
   }
 
-  // static getDerivedStateFromProps(props, state) {
-  //   // if (props.productToDisplay !== state.productToDisplay) {
-  //     if (!props.productToDisplay.node.hasOnlyDefaultVariant) {
-  //       const variantButtons = props.productToDisplay.node.variants.edges.reduce((variants, current) => {
-  //         return variants.includes(current.node.title) ? variants : variants.concat([current.node.title]).sort() 
-  //       }, []);
-  //       const lowerCaseFirstVariant = variantButtons[0].charAt(0).toLowerCase() + variantButtons[0].slice(1);
-  //       const variantImages = props.productToDisplay.node.images.edges.filter((image) => {
-  //         return image.node.altText === lowerCaseFirstVariant;
-  //       });
-  //       return {
-  //         variantButtons,
-  //         variantImages
-  //       }    
-  //     } else {  
-  //       return {
-  //         variantButtons: null,
-  //         variantImages: props.productToDisplay.node.images.edges
-  //       }
-  //     }  
-  //   // }
-  //   // return null;
-  // }
-
-  componentDidMount() {
-    const variantButtons = this.props.productToDisplay.node.variants.edges.reduce((variants, current) => {
-      return variants.includes(current.node.title) ? variants : variants.concat([current.node.title]).sort() 
-    }, []);
-    const lowerCaseFirstVariant = variantButtons[0].charAt(0).toLowerCase() + variantButtons[0].slice(1);
-    const variantImages = this.props.productToDisplay.node.images.edges.filter((image) => {
-      return image.node.altText === lowerCaseFirstVariant;
-    });
-    this.setState({variantImages});
+  static getDerivedStateFromProps(props, state) {
+    if (props.productToDisplay !== state.productToDisplay) {
+      if (!props.productToDisplay.node.hasOnlyDefaultVariant) {
+        const variants = props.productToDisplay.node.variants.edges.filter(variant => variant.node.inventoryQuantity > 0).reduce((variants, current) => {
+          return variants.concat([current.node.title]).sort()
+        }, []);
+        const lowerCaseFirstVariant = variants[0].charAt(0).toLowerCase() + variants[0].slice(1);
+        const images = props.productToDisplay.node.images.edges.filter((image) => {
+          return image.node.altText === lowerCaseFirstVariant;
+        });
+        const price = null;
+        return {
+          productToDisplay: props.productToDisplay,
+          variants,
+          images,
+          price
+        }    
+      } else {  
+        return {
+          productToDisplay: props.productToDisplay,
+          variants: null,
+          images: props.productToDisplay.node.images.edges,
+          price: props.productToDisplay.node.variants.edges[0].node.price
+        }
+      }  
+    }
+    return null;
   }
 
   handleVariantDetails = (variantTitle) => {
     const lowerCaseTitle = variantTitle.charAt(0).toLowerCase() + variantTitle.slice(1);
-    const variantImages = this.props.productToDisplay.node.images.edges.filter((image) => {
+    const images = this.props.productToDisplay.node.images.edges.filter((image) => {
       return image.node.altText === lowerCaseTitle;
     });
-    this.setState({variantImages});
+    this.setState({images});
   }
 
   render() {
-    console.log("variantImages state: ", this.state.variantImages);
     return (
       <Layout.Section primary>
-        {/* <Card title={this.props.productToDisplay.node.title}> */}
-          {/* <Card.Section title={
+        <Card title={this.props.productToDisplay.node.title} key={this.props.productKey}>
+          <Card.Section title={
             <Stack distribution="center">
               <ButtonGroup segmented>
                 {
-                  this.state.variantButtons === null 
+                  this.state.variants === null 
                   ? <div style={{height: "4rem"}}></div>
-                  : this.state.variantButtons.map((variantTitle, index) => {
+                  : this.state.variants.map((variantTitle, index) => {
                     return (
                       <Button outline key={index} onClick={() => this.handleVariantDetails(variantTitle)}>{variantTitle}</Button> 
                     );
@@ -75,85 +70,24 @@ class ProductDetails extends React.Component {
               </ButtonGroup>
             </Stack>
           }>
-            <Slideshow images={this.state.variantImages}/>
-          </Card.Section> */}
-
-          
-          {/* {
-            this.props.productToDisplay.node.hasOnlyDefaultVariant 
-            ? <Card.Section title={
-                <Stack>
-                  <ButtonGroup>
-                    <div style={{height: "4rem"}}></div>
-                  </ButtonGroup>
-                </Stack>
-              }>
-                <Slideshow images={this.props.productToDisplay.node.images.edges}/>
-              </Card.Section>
-            : <Card.Section title={  
-                <Stack distribution="center">
-                  <ButtonGroup segmented>
-                    {
-                      this.state.variantButtons.map((variantTitle, index) => {
-                        return (
-                          <Button outline key={index} onClick={() => this.handleVariantDetails(variantTitle)}>{variantTitle}</Button>
-                        );
-                      })
-                    }
-                  </ButtonGroup>
-                </Stack>   
-              }>
-                <Slideshow images={this.state.variantImages}/>
-              </Card.Section>  
-          } */}
-
-         <Card title={this.props.productToDisplay.node.title} key={this.props.productKey}>
-          {
-            this.props.productToDisplay.node.hasOnlyDefaultVariant 
-            ? <Card.Section title={
-                <Stack>
-                  <ButtonGroup>
-                    <div style={{height: "4rem"}}></div>
-                  </ButtonGroup>
-                </Stack>
-              }>
-                <Slideshow images={this.props.productToDisplay.node.images.edges}/>
-              </Card.Section>
-            : <Card.Section title={
-                <Stack distribution="center">
-                  <ButtonGroup segmented>
-                    {
-                      this.props.productToDisplay.node.variants.edges.reduce((variants, current) => {
-                        return variants.includes(current.node.title) ? variants : variants.concat([current.node.title]).sort() 
-                      }, []).map((variantTitle, index) => {
-                        return (
-                          <Button outline key={index} onClick={() => this.handleVariantDetails(variantTitle)}>{variantTitle}</Button>
-                        );
-                      })
-                    }
-                  </ButtonGroup>
-                </Stack>   
-              }>
-                <Slideshow images={this.state.variantImages}/>
-              </Card.Section>  
-          } 
-          
-          {/*<Card.Section title="Description">
+            <Slideshow images={this.state.images}/>
+          </Card.Section>
+          <Card.Section title="Description">
             <div>
               {
-                props.productToDisplay.node.descriptionHtml.indexOf('</') !== -1
+                this.state.productToDisplay.node.descriptionHtml.indexOf('</') !== -1
                 ? (
-                  <div dangerouslySetInnerHTML={{__html: props.productToDisplay.node.descriptionHtml.replace(/(<? *script)/gi, 'illegalscript')}}>
+                  <div dangerouslySetInnerHTML={{__html: this.state.productToDisplay.node.descriptionHtml.replace(/(<? *script)/gi, 'illegalscript')}}>
                   </div>
                   )
-                : props.productToDisplay.node.descriptionHtml  
+                : this.state.productToDisplay.node.descriptionHtml  
               }
             </div>
           </Card.Section>
           <Card.Section>
             <Stack distribution="trailing">
               <ButtonGroup>
-                <TextStyle variation="strong">${props.productToDisplay.node.variants.edges[0].node.price}</TextStyle>
+                <TextStyle variation="strong">${this.state.price}</TextStyle>
                 <div style={{color: '#000000'}}>
                   <Button monochrome outline>
                     Add to Cart
@@ -161,7 +95,7 @@ class ProductDetails extends React.Component {
                 </div>
               </ButtonGroup>
             </Stack>
-          </Card.Section>    */} 
+          </Card.Section>
         </Card>       
       </Layout.Section>
     );   
