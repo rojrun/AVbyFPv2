@@ -7,110 +7,119 @@ class ProductResults extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      productsList: {},
-      productToDisplay: {},
-      productKey: "",
-      productPrice: "",
-      productImages: []
+      productsList: {}
     }
+    console.log("data props: ", this.props.data.products.edges);
   }
 
   static getDerivedStateFromProps(props, state) {
     if (props.data !== state.productsList) {
-      let productsList = {};
-      let vendorObj = {};
-      let productArray = [];
+      const productsList = {};
+      const vendorObj = {};
+      const vendorProductArray = [];
+      const productNode = {};
+      const productNodeWithVariants = {};
+      
+      // Loop through products
+      // Loop through first set of keys,
+      // if key = node, loop through node
+      // filter variant with inventoryQuantity > 0
+      
+
+      const products = props.data.products.edges.map((product) => {
+        console.log("product: ", product);
+        if (product.node.hasOnlyDefaultVariant) {
+          return product;
+        }
+        console.log("product: ", product);
+
+
+        Object.entries(product).map(([key, index]) => {
+          console.log("key: ", key, " | index: ", index);
+          const productVariants = product.node.variants.edges.filter((variant) => {
+            return variant.node.inventoryQuantity > 0
+          });
+          console.log("productVariants: ", productVariants);
+        });
+
+      });
+      console.log("products: ", products);
+
+
+
+
       // Searches for vendor to use as keys in productsList
       const vendorKeys = props.data.products.edges.reduce((allProducts, current) => {
         return allProducts.includes(current.node.vendor) ? allProducts : allProducts.concat([current.node.vendor]).sort()
       }, []);
       
       // Makes products array from vendor keys
-      vendorKeys.map((vendor) => {
-        const products = props.data.products.edges.filter((product) => product.node.vendor === vendor)
-          .sort((first, second) => {
-            let a = first.node.title;
-            let b = second.node.title;
-            return a === b ? 0 : a > b ? 1 : -1;
-        });
-        console.log("vendor: ", vendor);
+      // vendorKeys.map((vendor) => {
+      //   console.log("vendor key: ", vendor);
+      //   const products = props.data.products.edges.filter((product) => product.node.vendor === vendor)
+      //     .sort((first, second) => {
+      //       let a = first.node.title;
+      //       let b = second.node.title;
+      //       return a === b ? 0 : a > b ? 1 : -1;
+      //   });
+      //   console.log("products sorted by vendor in array: ", products);
         
-        
-        // Checks if product array element has variants
-        products.map((product) => {
-          console.log("product: ", product);
-         
-          // Makes array of variant titles
-          const productVariantTitles = product.node.variants.edges
-            .filter(variant => variant.node.inventoryQuantity > 0)
-            .reduce((productVariantTitles, currentProduct) => {
-              return productVariantTitles.concat([currentProduct.node.title]).sort()
-          }, []);
+      //   // Checks if product array element has variants
+      //   products.map((product) => {
+      //     console.log("product: ", product);
+      //     if (product.node.hasOnlyDefaultVariant) {
+      //       productArray.push(product);  
+      //       console.log("productArray: ", productArray); 
+      //       return productArray;
+      //     }
           
-          if (product.node.hasOnlyDefaultVariant) {
-            return productArray.push(product);   
-          }
+      //     // Makes array of variant titles
+      //     const productVariantTitles = product.node.variants.edges
+      //       .filter(variant => variant.node.inventoryQuantity > 0)
+      //       .reduce((productVariantTitles, currentProduct) => {
+      //         return productVariantTitles.concat([currentProduct.node.title]).sort()
+      //     }, []);
+      //     console.log("productVariantTitles: ", productVariantTitles);
           
-          // Get keys of product object
-          // Loop through keys
-          // if key is variants, change variants.node = newFilteredProductArray
-          // Else reattach remaining keys to firstLayerObject
-          // let firstLayerObject = {};
-          Object.entries(product).forEach(([vendorObjKey, vendorObjIndex]) => {
-            console.log("vendorObjKey: ", vendorObjKey);
-            console.log("vendorObjIndex: ", vendorObjIndex);
-            if (vendorObjKey !== "node") {
-              console.log("vendorObjKey: ", vendorObjKey, " vendorObjIndex: ", vendorObjIndex);
-              const test5 = vendorObj[vendorObjKey] = vendorObjIndex;
-              console.log("test5: ", test5);
-              return test5;
-            }  
-          
+      //     // Loops through node key to secondLayerObjKey, to find variants key
+      //     Object.entries(product).forEach(([vendorObjKey, vendorObjIndex]) => {
+      //       if (vendorObjKey !== "node") {
+      //         productNode[vendorObjKey] = vendorObjIndex;
+      //         return productNode;
+      //       }  
             
-            Object.entries(vendorObjIndex).forEach(([secondLayerObjKey, secondLayerObjIndex]) => {
-              console.log("secondLayerObjKey: ", secondLayerObjKey, " secondLayerObjIndex: ", secondLayerObjIndex);
-              if (secondLayerObjKey !== "variants") {
-                // console.log("secondLayerObj: ", firstLayerObjectIndex[secondLayerObjKey] = secondLayerObjIndex);
-                // return firstLayerObjectIndex[secondLayerObjKey] = secondLayerObjIndex;
-                console.log("secondLayerObjIndex: ", secondLayerObjIndex);
-                // return secondLayerObjIndex;
-                const test1 = vendorObj[secondLayerObjKey] = secondLayerObjIndex;
-                console.log("test1: ", test1);
-                return test1;
-              }  
-              // Makes new array by removing product variantElement with no
-              const newFilteredProductArray = secondLayerObjIndex.edges.filter((variantElement) => {
-                const variantTitle = variantElement.node.title;
-                return productVariantTitles.includes(variantTitle);
-              });
-              console.log("newFilteredProductArray: ", newFilteredProductArray);
-              console.log("vendorObj: ", vendorObj);
-              console.log('secondLayerObjKey: ', secondLayerObjKey);
-              const test2 = vendorObj[secondLayerObjKey] = newFilteredProductArray;
-              console.log("test2: ", test2);
-              return test2;
-            });    
-          });     
-          console.log("vendorObj: ", vendorObj);
-          const test3 = Object.assign(productsList, vendorObj);
-          console.log("test3: ", test3);
-          return test3;
-        });
-        console.log("productArray: ", productArray);
-        vendorObj[vendor] = productArray;
-        const test4 = Object.assign(productsList, vendorObj);
-        console.log("test4: ", test4);
-        return test4;
-      });
+      //       Object.entries(vendorObjIndex).forEach(([secondLayerObjKey, secondLayerObjIndex]) => {
+      //         if (secondLayerObjKey !== "variants") {
+      //           productWithVariants[secondLayerObjKey] = secondLayerObjIndex;
+      //           productNode[vendorObjKey] = productWithVariants;
+      //           return productNode;
+      //         }  
+      //         // Makes new array by removing product variantElement that doesn't match with productVariantTitles
+      //         const newFilteredVariantsArray = secondLayerObjIndex.edges.filter((variantElement) => {
+      //           const variantTitle = variantElement.node.title;
+      //           return productVariantTitles.includes(variantTitle);
+      //         });
+      //         productWithVariants[secondLayerObjKey] = newFilteredVariantsArray;
+      //         productNode[vendorObjKey] = productWithVariants;
+      //         return productNode;
+      //       });
+      //       return productArray;
+      //     });     
+      //     productArray.push(productNode); 
+      //     return productArray;
+      //   });
+        
+      //   vendorObj[vendor] = productArray;
+      //   console.log("vendorObj: ", vendorObj);
+      //   Object.assign(productsList, vendorObj);
+      //   console.log("productsList: ", productsList);
+      //   return productsList;
+      // });
       return {
-        productsList
+        productsList: productsList
       };   
     }
     return null;
-  }
-
-  componentDidMount() {
-    console.log("componentDidMount(), productsList state: ", this.state.productsList);
   }
 
   handleProductDetails = (key, product) => {
@@ -121,6 +130,7 @@ class ProductResults extends React.Component {
   }
 
   render() {
+    console.log("state.productsList: ", this.state.productsList);
     return ( 
       <Layout>
         <Layout.Section secondary>
