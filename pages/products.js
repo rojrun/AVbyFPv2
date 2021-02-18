@@ -13,10 +13,10 @@ const Products = () => {
     <Query query={GET_PRODUCTS_BY_PRODUCT_TYPE} variables={productTypeObj} ssr={false}>
       {({data, loading, error}) => {
         if (loading) return <Card title="Loading ..."></Card>;
-        if (error) return <Card>{error.message}</Card>;   
+        if (error) return <Card>{error.message}</Card>;
         return (
           <Page title={`${(productType + 's').toUpperCase()}`} fullWidth> 
-            <ProductResults data={data} originalDataListCount={data.products.edges.length}/>
+            <ProductResults data={data}/>
           </Page>
         );    
       }}
