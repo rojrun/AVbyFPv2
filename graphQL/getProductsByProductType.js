@@ -21,7 +21,7 @@ query getProductType($product_type: String!) {
         tags
         totalInventory
         vendor
-        variants(first: 5) {
+        variants(first: 5, sortKey: TITLE) {
           edges {
             node {
               image {
