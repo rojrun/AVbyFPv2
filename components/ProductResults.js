@@ -9,47 +9,51 @@ class ProductResults extends React.Component {
     this.state = {
       productsList: {}
     }
+    console.log("props: ", this.props.data.products.edges);
   }
 
   static getDerivedStateFromProps(props, state) {
     if (props.data !== state.productsList) {
       const productsList = {};
-      const productWithVariants = {};
       const nodeObj = {};
       const variantsObj = {};
-      
+      const edgesObj = {};
+     
       const products = props.data.products.edges.map((product) => {
+        console.log("product: ", product);
         if (product.node.hasOnlyDefaultVariant) {
           return product;
         }
-        // Restructure product to productWithVariants
-        Object.entries(product).map(([productKey, productValue]) => {
-          if (productKey !== "node") {
-            productWithVariants[productKey] = productValue;
-            return productWithVariants;
+        console.log("product with variants: ", product);
+        // Restructure product to nodeObj
+        Object.entries(product).map(([firstLayerKey, firstLayerValue]) => {
+          console.log("firstLayerKey: ", firstLayerKey, " | firstLayerValue: ", firstLayerValue);
+          if (firstLayerKey !== "node") {
+            nodeObj[firstLayerKey] = firstLayerValue;
+            return nodeObj;
           }  
         
-          Object.entries(productValue).map(([secondLayerObjKey, secondLayerObjIndex]) => {
-            if (secondLayerObjKey !== "variants") {
-              nodeObj[secondLayerObjKey] = secondLayerObjIndex;
-              productWithVariants[productKey] = nodeObj;
-              return productWithVariants;
+          Object.entries(firstLayerValue).map(([secondLayerKey, secondLayerValue]) => {
+            if (secondLayerKey !== "variants") {
+              nodeObj[secondLayerKey] = secondLayerValue;
+              variantsObj[firstLayerKey] = nodeObj;
+              return variantsObj;
             }  
           
-            Object.entries(secondLayerObjIndex).map(([key, value]) => {
-              if (key !== "edges") {
-                variantsObj[key] = value;
-                nodeObj[secondLayerObjKey] = variantsObj;
+            Object.entries(secondLayerValue).map(([thirdLayerKey, thirdLayerValue]) => {
+              if (thirdLayerKey !== "edges") {
+                edgesObj[thirdLayerKey] = thirdLayerValue;
+                nodeObj[secondLayerKey] = edgesObj;
                 return nodeObj;
               }
               
               // Filters variants with inventoryQuantity > 0
-              const productVariantsArray = value.filter((variant) => {
+              const productVariantsArray = thirdLayerValue.filter((variant) => {
                 return variant.node.inventoryQuantity > 0;
               });
-              variantsObj[key] = productVariantsArray;
-              nodeObj[secondLayerObjKey] = variantsObj;
-              productWithVariants[productKey] = nodeObj;
+              variantsObj[thirdLayerKey] = productVariantsArray;
+              nodeObj[secondLayerKey] = variantsObj;
+              productWithVariants[firstLayerKey] = nodeObj;
               return productWithVariants;  
             });          
           });     
@@ -106,13 +110,14 @@ class ProductResults extends React.Component {
                       renderItem={(value) => {
                         console.log("value: ", value);
                         const {id, title} = value.node;
+                        console.log("id: ", id);
+                        console.log("title: ", title);
                         const media = <Thumbnail
                           source={value.node.images.edges[0].node.originalSrc}
                           size="small"
                           alt={value.node.images.edges[0].node.altText}  
                         />  
                         const price = value.node.variants.edges[0].node.price;
-                        console.log("price: ", price);
                         return (
                           <ResourceItem
                             id={id}

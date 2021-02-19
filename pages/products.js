@@ -24,3 +24,23 @@ const Products = () => {
   );  
 }
 export default Products;
+
+/*
+gid://shopify/Product/6096156983463
+
+product_id:'gid://shopify/Product/6096150397095'
+
+variants(first: 5, sortKey: TITLE) {
+  edges {
+    node {
+      image {
+        id
+      }
+      price
+      id   
+      title
+      inventoryQuantity
+    }
+  }
+}
+*/
