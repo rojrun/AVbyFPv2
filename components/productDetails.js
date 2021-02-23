@@ -8,6 +8,7 @@ class ProductDetails extends React.Component {
     super(props);
     this.state = {
       productToDisplay: {},
+      productKey: "",
       variants: [],
       images: [],
       price: ""
@@ -17,16 +18,16 @@ class ProductDetails extends React.Component {
   static getDerivedStateFromProps(props, state) {
     if (props.productToDisplay !== state.productToDisplay) {
       if (!props.productToDisplay.node.hasOnlyDefaultVariant) {
-        const variants = props.productToDisplay.node.variants.edges.filter(variant => variant.node.inventoryQuantity > 0).reduce((variants, current) => {
-          return variants.concat([current.node.title]).sort()
+        const variants = props.productToDisplay.node.variants.edges.reduce((variants, current) => {
+          return variants.concat([current.node.title])
         }, []);
-        const lowerCaseFirstVariant = variants[0].charAt(0).toLowerCase() + variants[0].slice(1);
         const images = props.productToDisplay.node.images.edges.filter((image) => {
-          return image.node.altText === lowerCaseFirstVariant;
+          return image.node.altText === variants[0];
         });
-        const price = null;
+        const price = props.productToDisplay.node.variants.edges[0].node.price;
         return {
           productToDisplay: props.productToDisplay,
+          productKey: props.productKey,
           variants,
           images,
           price
@@ -34,6 +35,7 @@ class ProductDetails extends React.Component {
       } else {  
         return {
           productToDisplay: props.productToDisplay,
+          productKey: props.productKey,
           variants: null,
           images: props.productToDisplay.node.images.edges,
           price: props.productToDisplay.node.variants.edges[0].node.price
@@ -44,17 +46,22 @@ class ProductDetails extends React.Component {
   }
 
   handleVariantDetails = (variantTitle) => {
-    const lowerCaseTitle = variantTitle.charAt(0).toLowerCase() + variantTitle.slice(1);
-    const images = this.props.productToDisplay.node.images.edges.filter((image) => {
-      return image.node.altText === lowerCaseTitle;
+    const images = this.state.productToDisplay.node.images.edges.filter((image) => {
+      return image.node.altText === variantTitle;
     });
-    this.setState({images});
+    const variantElement = this.state.productToDisplay.node.variants.edges.filter((variant) => {
+      return variant.node.title === variantTitle;
+    });
+    this.setState({
+      images,
+      price: variantElement[0].node.price
+    });
   }
 
   render() {
     return (
       <Layout.Section primary>
-        <Card title={this.props.productToDisplay.node.title} key={this.props.productKey}>
+        <Card title={this.state.productToDisplay.node.title} key={this.state.productKey}>
           <Card.Section title={
             <Stack distribution="center">
               <ButtonGroup segmented>

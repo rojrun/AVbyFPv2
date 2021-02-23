@@ -7,49 +7,52 @@ class ProductResults extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      productsList: {}
+      productsList: {},
+      productToDisplay: {},
+      productId: ""
     }
   }
 
   static getDerivedStateFromProps(props, state) {
     if (props.data !== state.productsList) {
       const productsList = {};
-      const productWithVariants = {};
-      const nodeObj = {};
-      const variantsObj = {};
-      
       const products = props.data.products.edges.map((product) => {
+        const productWithVariants = {};
         if (product.node.hasOnlyDefaultVariant) {
           return product;
         }
-        // Restructure product to productWithVariants
-        Object.entries(product).map(([productKey, productValue]) => {
-          if (productKey !== "node") {
-            productWithVariants[productKey] = productValue;
-            return productWithVariants;
-          }  
         
-          Object.entries(productValue).map(([secondLayerObjKey, secondLayerObjIndex]) => {
-            if (secondLayerObjKey !== "variants") {
-              nodeObj[secondLayerObjKey] = secondLayerObjIndex;
-              productWithVariants[productKey] = nodeObj;
+        // Restructure product to productWithVariants
+        Object.entries(product).map(([firstLayerKey, firstLayerValue]) => {
+          if (firstLayerKey !== "node") {
+            productWithVariants[firstLayerKey] = firstLayerValue;
+            return productWithVariants;
+          }
+        
+          const nodeObj = {};
+          Object.entries(firstLayerValue).map(([secondLayerKey, secondLayerValue]) => {
+            if (secondLayerKey !== "variants") {
+              nodeObj[secondLayerKey] = secondLayerValue;
+              productWithVariants[firstLayerKey] = nodeObj;
               return productWithVariants;
             }  
-          
-            Object.entries(secondLayerObjIndex).map(([key, value]) => {
-              if (key !== "edges") {
-                variantsObj[key] = value;
-                nodeObj[secondLayerObjKey] = variantsObj;
-                return nodeObj;
+            
+            const variantsObj = {};
+            Object.entries(secondLayerValue).map(([thirdLayerKey, thirdLayerValue]) => {
+              if (thirdLayerKey !== "edges") {
+                variantsObj[thirdLayerKey] = thirdLayerValue;
+                nodeObj[secondLayerKey] = variantsObj;
+                productWithVariants[firstLayerKey] = nodeObj;
+                return productWithVariants;
               }
               
               // Filters variants with inventoryQuantity > 0
-              const productVariantsArray = value.filter((variant) => {
+              const edgesArray = thirdLayerValue.filter((variant) => {
                 return variant.node.inventoryQuantity > 0;
               });
-              variantsObj[key] = productVariantsArray;
-              nodeObj[secondLayerObjKey] = variantsObj;
-              productWithVariants[productKey] = nodeObj;
+              variantsObj[thirdLayerKey] = edgesArray;
+              nodeObj[secondLayerKey] = variantsObj;
+              productWithVariants[firstLayerKey] = nodeObj;
               return productWithVariants;  
             });          
           });     
@@ -57,7 +60,6 @@ class ProductResults extends React.Component {
         product = productWithVariants;
         return product;
       });
-     
       // Searches for vendor to use as keys in productsList
       const vendorKeys = products.reduce((allProducts, current) => {
         return allProducts.includes(current.node.vendor) ? allProducts : allProducts.concat([current.node.vendor]).sort()
@@ -71,7 +73,7 @@ class ProductResults extends React.Component {
             let b = second.node.title;
             return a === b ? 0 : a > b ? 1 : -1;
         });
-        productsList[vendor] = filteredArray;
+        productsList[vendor] = filteredArray;      
         return productsList;
       });  
       return {
@@ -81,10 +83,18 @@ class ProductResults extends React.Component {
     return null;
   }
 
-  handleProductDetails = (key, product) => {
+  componentDidMount() {
+    const firstProduct = (Object.values(this.state.productsList)[0])[0];
+    this.setState({
+      productToDisplay: firstProduct,
+      productId: firstProduct.node.id
+    })
+  }
+
+  handleProductDetails = (id, product) => {
     this.setState({
       productToDisplay: product,
-      productKey: key
+      productId: id
     });
   }
 
@@ -95,8 +105,6 @@ class ProductResults extends React.Component {
           <Card title={`Results | Showing ${this.props.data.products.edges.length} products`}>
             {
               Object.entries(this.state.productsList).map(([key, values]) => {
-                console.log("key: ", key);
-                console.log("values: ", values);
                 return (           
                   <Card.Section title={key} key={key}>
                     <ResourceList
@@ -104,15 +112,13 @@ class ProductResults extends React.Component {
                       items={values}
                       totalItemsCount={values.length}
                       renderItem={(value) => {
-                        console.log("value: ", value);
                         const {id, title} = value.node;
                         const media = <Thumbnail
                           source={value.node.images.edges[0].node.originalSrc}
                           size="small"
                           alt={value.node.images.edges[0].node.altText}  
-                        />  
+                        />;  
                         const price = value.node.variants.edges[0].node.price;
-                        console.log("price: ", price);
                         return (
                           <ResourceItem
                             id={id}
@@ -133,11 +139,13 @@ class ProductResults extends React.Component {
             } 
           </Card>
         </Layout.Section>
-        {/* {
-          this.state.productToDisplay && this.state.productKey
-          ? <ProductDetails productToDisplay={this.state.productToDisplay} productKey={this.state.productKey}/>
-          : <Card title="Loading..."></Card>
-        } */}
+        {
+          this.state.productToDisplay && this.state.productId
+          ? <ProductDetails productToDisplay={this.state.productToDisplay} productKey={this.state.productId}/>
+          : <Layout.Section>
+              <Card title="Loading..."></Card>
+            </Layout.Section>
+        }
       </Layout>   
     );
   }
