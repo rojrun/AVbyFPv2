@@ -35,14 +35,14 @@ class ProductTypeCategories extends React.Component {
 
   render() { 
     return (
-        <Layout.Section>
-          <Card sectioned>
-            <Link onClick={() => {this.redirectToProducts()}}>
-              {this.capitalizeFirstLetter(this.props.productType)}  
-            </Link>
-          </Card>
-        </Layout.Section>
-      );
-    }
+      <Layout.Section secondary>
+        <Card sectioned>
+          <Link onClick={() => {this.redirectToProducts()}}>
+            {this.capitalizeFirstLetter(this.props.productType)}  
+          </Link>
+        </Card>
+      </Layout.Section>
+    );
+  }
 }
 export default ProductTypeCategories;
