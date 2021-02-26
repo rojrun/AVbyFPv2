@@ -11,7 +11,7 @@ class ProductApplication extends React.Component {
     super(props);
     this.state = {
       app: {},
-      showSubLink: false
+      subLinkToShow: false
     }
   }
 
@@ -20,11 +20,12 @@ class ProductApplication extends React.Component {
   }
 
   showSubLink = (link, index) => {
-    // console.log("link: ", link, " | index: ", index);
+    console.log("link: ", this.props.links[index].subLink);
     if (!link.subLink) {
       this.redirectToProductResults(link);
     } else {
-      this.setState({showSubLink: true});
+      this.setState({subLinkToShow: true});
+      // this.setState({subLinkToShow: this.props.links[index].subLink});
     }
   }
 
@@ -50,6 +51,7 @@ class ProductApplication extends React.Component {
         <Card sectioned title={this.props.title}>
           {
             this.props.links.map((link, index) => {
+              console.log("LInk: ", link);
               return (
                 <Card.Section key={index}>
                   <Link
@@ -59,11 +61,12 @@ class ProductApplication extends React.Component {
                     {link.topLevel}
                   </Link>
                   { 
-                    this.state.showSubLink && link.subLink
+                    this.state.subLinkToShow && link.subLink
+                    // this.state.subLinkToShow
                     ? <Stack distribution="center">
                         <ButtonGroup>
                           {
-                            link.subLink.map((link, index) => {
+                            link.subLink.map((link, index) => {  
                               return (
                                 <Button outline key={index}>
                                   {link}  
@@ -73,7 +76,7 @@ class ProductApplication extends React.Component {
                           }
                         </ButtonGroup>
                       </Stack>
-                    : null  
+                    : null
                   }
                 </Card.Section>
               );

@@ -4,7 +4,7 @@ import ProductApplication from '../components/productApplication.js';
 
 const Index = () => {
   return (
-    <Page fullWidth title="Let us help You ...">
+    <Page singleColumn title="Let us help You ...">
       <Layout>  
         <ProductApplication 
           title="Connect ..."
