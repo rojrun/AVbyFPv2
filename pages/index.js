@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, ButtonGroup, Card, Layout, Link, Page, Stack} from '@shopify/polaris';
+import {Layout, Page} from '@shopify/polaris';
 import ProductApplication from '../components/productApplication.js';
 
 const Index = () => {
@@ -16,7 +16,7 @@ const Index = () => {
          },
         {
           topLevel: "Accessories",
-          tags: "accessories"
+          tag: "accessories"
         }
       ]
     },
@@ -24,23 +24,23 @@ const Index = () => {
       "Perform ...": [
         {
           topLevel: "Microphones",
-          tags: "microphone"
+          tag: "microphone"
         },
         {
           topLevel: "Mixers",
-          tags: "mixers"
+          tag: "mixers"
         },
         {
           topLevel: "PA",
-          tags: "pa"
+          tag: "pa"
         },
         {
           topLevel: "Stage Lighting",
-          tags: "stage lighting"
+          tag: "stage lighting"
         },
         {
           topLevel: "Accessories",
-          tags: "accessories"
+          tag: "accessories"
         }
       ]
     },
@@ -48,7 +48,7 @@ const Index = () => {
       "Create ...": [
         {
           topLevel: "Recorders",
-          tags: "recorders"
+          tag: "recorders"
         }
       ]
     },
@@ -56,11 +56,11 @@ const Index = () => {
       "Present ...": [
         {
           topLevel: "with high powered Projectors",
-          tags: "projector"
+          tag: "projector"
         },
         {
           topLevel: "your streaming content with A/V Switchers",
-          tags: "av switcher"
+          tag: "av switcher"
         }
       ]
     },
@@ -80,11 +80,11 @@ const Index = () => {
       "Deal ...": [
         {
           topLevel: "Time Sensitive Specials",
-          tags: ["bundles", "rebates"]
+          tag: ["bundles", "rebates"]
         },
         {
           topLevel: "Open Box Specials",
-          tags: "open box"
+          tag: "open box"
         }
       ]
     }

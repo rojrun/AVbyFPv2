@@ -2,23 +2,30 @@ import React from 'react';
 import {Query} from 'react-apollo';
 import {Card, Page} from '@shopify/polaris';
 import store from 'store-js';
-import GET_PRODUCTS_BY_PRODUCT_TYPE from '../graphQL/getProductsByProductType.js';
+import GET_PRODUCTS_BY_TYPE from '../graphQL/getProductsByType.js';
 import ProductResults from '../components/productResults.js';
 
 const Products = () => {
-  const productType = store.get('productType');
+  const tag = store.get('tag');
   const productTypeObj = {};
-  productTypeObj.product_type = `product_type:${productType} status:ACTIVE inventory_total:>0`;
+  productTypeObj.tag = `tag:${tag} status:ACTIVE inventory_total:>0`;
   return (
-    <Query query={GET_PRODUCTS_BY_PRODUCT_TYPE} variables={productTypeObj} ssr={false}>
+    <Query query={GET_PRODUCTS_BY_TYPE} variables={productTypeObj} ssr={false}>
       {({data, loading, error}) => {
         if (loading) return <Card title="Loading ..."></Card>;
         if (error) return <Card>{error.message}</Card>;
+        if (data.products.edges.length) {
+          return (
+            <Page title={tag.toUpperCase()} fullWidth> 
+              <ProductResults data={data}/>
+            </Page>
+          );   
+        } 
         return (
-          <Page title={`${(productType + 's').toUpperCase()}`} fullWidth> 
-            <ProductResults data={data}/>
+          <Page>
+            <Card title="No search results"></Card>
           </Page>
-        );    
+        );
       }}
     </Query>
   );  

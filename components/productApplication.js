@@ -11,55 +11,27 @@ class ProductApplication extends React.Component {
     super(props);
     this.state = {
       app: {},
-      subLinkToShow: [],
-      // links: []
+      subLinkToShow: []
     }
   }
-
-  // static getDerivedStateFromProps(props, state) {
-  //   if (props.links !== state.links) {
-  //     return {links: props.links}
-  //   }
-  //   return null;
-  // }
 
   componentDidMount() {
     this.setState({app: this.context});
   }
 
-  // shouldComponentUpdate(nextProps, nextState) {
-  //   console.log("should state: ", nextState.links);
-  //   return this.state.links.showLinks !== nextState.links.showLinks;
-  // }
-
-  // getSnapshotBeforeUpdate(prevProps, prevState) {
-  //   if (this.state.links.showLinks !== prevState.links.showLinks) {
-  //     return this.state.links.showLinks;
-  //   }
-  //   return null;
-  // }
-
-  // componentDidUpdate(prevProps, prevState, snapshot) {
-  //   if (snapshot !== null) {
-  //     this.setState({links: this.state.links[index].showLinks = true});
-  //   }
-  // }
-
-  showSubLinks = (links, index) => {
-    console.log("Link: ", links);
+  // If links has subLinks, show buttons
+  showSubLinks = (links, firstIndex, secondIndex) => {
     if (!links.subLink) {
-      this.redirectToProductResults(links);
+      this.redirectToProductResults(links.tag);
     } else {
-      this.setState({subLinkToShow: links.subLink});
-      // this.setState({links: this.state.links[index].showLinks = true});
-      // this.setState({subLinkToShow: true});
+      const subLinkToShow = this.props.applications[firstIndex][Object.keys(this.props.applications[firstIndex])[0]][secondIndex].subLink;
+      this.setState({subLinkToShow});
     }
   }
 
-  redirectToProductResults = (link) => {
-    // console.log("redirect link: ", link);
-    store.remove('tags');
-    store.set('tags', link.tags);
+  redirectToProductResults = (tag) => {
+    store.remove('tag');
+    store.set('tag', tag);
     const redirect = Redirect.create(this.state.app);
     redirect.dispatch(
       Redirect.Action.APP,
@@ -67,38 +39,35 @@ class ProductApplication extends React.Component {
     );   
   };
 
-  // capitalizeFirstLetter = (str) => {
-  //   str += 's';
-  //   return str.charAt(0).toUpperCase() + str.slice(1);
-  // }
-
   render() {
     return (
       <React.Fragment>
         {
-          this.props.applications.map((application, index) => {
+          this.props.applications.map((application, firstIndex) => {
             return (
-              <Layout.Section secondary key={index}>
-                <Card sectioned title={Object.keys(application)} key={index}>
+              <Layout.Section secondary key={firstIndex}>
+                <Card sectioned title={Object.keys(application)} key={firstIndex}>
                   {
-                    Object.values(application)[0].map((links, index) => {
-                      console.log("Links: ", links);
+                    Object.values(application)[0].map((links, secondIndex) => {
                       return (
-                        <Card.Section key={index}>
+                        <Card.Section key={secondIndex}>
                           <Link
-                            key={index}
-                            onClick={() => {this.showSubLinks(links, index)}}
+                            key={secondIndex}
+                            onClick={() => {this.showSubLinks(links, firstIndex, secondIndex)}}
                           >
                             {links.topLevel}
                           </Link>
                           {
-                            this.state.subLinkToShow
+                            links.subLink && (links.subLink === this.state.subLinkToShow)
                             ? <Stack distribution="center">
                                 <ButtonGroup>
                                   {
-                                    this.state.subLinkToShow.map((subLink, index) => {
+                                    links.subLink.map((subLink, index) => {
                                       return (
-                                        <Button key={index}>
+                                        <Button
+                                          key={index}
+                                          onClick={() => {this.redirectToProductResults(subLink)}}
+                                        >
                                           {subLink}
                                         </Button>
                                       )

@@ -11,6 +11,7 @@ class ProductResults extends React.Component {
       productToDisplay: {},
       productId: ""
     }
+    console.log("data props: ", this.props.data.products.edges);
   }
 
   static getDerivedStateFromProps(props, state) {
@@ -60,22 +61,53 @@ class ProductResults extends React.Component {
         product = productWithVariants;
         return product;
       });
+      console.log("products after removing variant: ", products);
+      const vendorKeys = ["akg", "audio-technica", "chauvet", "electro-voice", "furman", "hosa", "k&m", "neumann", "neutrik", "presonus", "pioneer", 
+        "radial", "sennheiser", "shure", "zoom"];
+
       // Searches for vendor to use as keys in productsList
-      const vendorKeys = products.reduce((allProducts, current) => {
-        return allProducts.includes(current.node.vendor) ? allProducts : allProducts.concat([current.node.vendor]).sort()
-      }, []);
+      // const vendorKeys = products.reduce((allProducts, current) => {
+      //   return allProducts.includes(current.node.vendor) ? allProducts : allProducts.concat([current.node.vendor]).sort()
+      // }, []);
     
       // Makes products array from vendor keys
-      vendorKeys.map((vendor) => {
-        const filteredArray = products.filter((product) => product.node.vendor === vendor)
-          .sort((first, second) => {
-            let a = first.node.title;
-            let b = second.node.title;
-            return a === b ? 0 : a > b ? 1 : -1;
-        });
-        productsList[vendor] = filteredArray;      
-        return productsList;
-      });  
+      // vendorKeys.map((vendor) => {
+      //   console.log("vendor: ", vendor);
+      //   const filteredArray = products.filter((product) => {
+      //     console.log("product: ", product);
+
+      //     return product.node.tags.filter((tag) => {
+      //       console.log("tag: ", tag);
+      //       return tag === vendor;
+      //     })
+      //   })
+      //     // .sort((first, second) => {
+      //     //   let a = first.node.title;
+      //     //   let b = second.node.title;
+      //     //   return a === b ? 0 : a > b ? 1 : -1;
+      //     // }
+      //   // );
+      //   console.log("filteredArray: ", filteredArray);
+      //   productsList[vendor] = filteredArray;    
+      //   console.log("productsList: ", productsList);  
+      //   return productsList;
+      // });  
+
+      // map through vendorKeys
+      // use vendor if product.node.tags === vendor
+      // use newProducts array
+      // productsList[vendor] = newProducts
+      const productVendorKey = vendorKeys.filter((vendor) => {
+        console.log("vendor: ", vendor);
+        return products.filter((product) => {
+          console.log("product tags: ", product.node.tags);
+          return product.node.tags.filter((tag) => {
+            return tag === vendor;
+          })
+        })
+      })
+      console.log("productVendorKey: ", productVendorKey);
+
       return {
         productsList
       };   
