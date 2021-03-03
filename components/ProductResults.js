@@ -11,7 +11,6 @@ class ProductResults extends React.Component {
       productToDisplay: {},
       productId: ""
     }
-    console.log("data props: ", this.props.data.products.edges);
   }
 
   static getDerivedStateFromProps(props, state) {
@@ -62,8 +61,41 @@ class ProductResults extends React.Component {
         return product;
       });
       console.log("products after removing variant: ", products);
-      const vendorKeys = ["akg", "audio-technica", "chauvet", "electro-voice", "furman", "hosa", "k&m", "neumann", "neutrik", "presonus", "pioneer", 
-        "radial", "sennheiser", "shure", "zoom"];
+      const allVendors = [
+        "akg", "audio-technica", "chauvet", "electro-voice", "furman", "hosa", "k&m", "neumann", "neutrik", "presonus", "pioneer", "radial", "sennheiser", "shure", "zoom"
+      ];
+      // loop through products, to product.node.tags
+      // check if each element is equal to product.node.tags ["audio-technica", "headphones", "deals"]
+      // output vendorKeys = ["audio-technica"]
+     
+      // const vendorKeys = products.map((product) => {
+      //   return product.node.tags.filter((tag) => {
+      //     console.log("allVendors.indexOf(tag) !== -1: ", allVendors.indexOf(tag) !== -1);
+      //     return allVendors.indexOf(tag) !== -1;
+      //   })
+        
+      // });
+      const vendorKeys = products.map((product) => {
+        const filterA = product.node.tags.filter((tag) => {
+          return allVendors.includes(tag);
+        });
+        console.log("filterA: ", filterA);
+        return vendorKeys.includes(filterA) ? vendorKeys : vendorKeys.concat([filterA]).sort();
+      });
+      
+        // const found = product.node.tags.some(el => allVendors.includes(el));
+        // console.log("found: ", found);
+     
+
+      // const vendorKeys = products.reduce((newVendorArray, current) => {
+      //   let tag = allVendors.filter((el) => {
+      //     return current.node.tags.includes(el))
+      //   });
+      //   console.log("tag: ", tag);
+      //   return newVendorArray.includes(tag) ? newVendorArray : newVendorArray.concat([tag]).sort()
+      // }, []);
+      console.log("vendorKeys: ", vendorKeys);
+      
 
       // Searches for vendor to use as keys in productsList
       // const vendorKeys = products.reduce((allProducts, current) => {
@@ -93,21 +125,7 @@ class ProductResults extends React.Component {
       //   return productsList;
       // });  
 
-      // map through vendorKeys
-      // use vendor if product.node.tags === vendor
-      // use newProducts array
-      // productsList[vendor] = newProducts
-      const productVendorKey = vendorKeys.filter((vendor) => {
-        console.log("vendor: ", vendor);
-        return products.filter((product) => {
-          console.log("product tags: ", product.node.tags);
-          return product.node.tags.filter((tag) => {
-            return tag === vendor;
-          })
-        })
-      })
-      console.log("productVendorKey: ", productVendorKey);
-
+      
       return {
         productsList
       };   
@@ -115,13 +133,13 @@ class ProductResults extends React.Component {
     return null;
   }
 
-  componentDidMount() {
-    const firstProduct = (Object.values(this.state.productsList)[0])[0];
-    this.setState({
-      productToDisplay: firstProduct,
-      productId: firstProduct.node.id
-    })
-  }
+  // componentDidMount() {
+  //   const firstProduct = (Object.values(this.state.productsList)[0])[0];
+  //   this.setState({
+  //     productToDisplay: firstProduct,
+  //     productId: firstProduct.node.id
+  //   })
+  // }
 
   handleProductDetails = (id, product) => {
     this.setState({
