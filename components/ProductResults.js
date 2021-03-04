@@ -60,72 +60,29 @@ class ProductResults extends React.Component {
         product = productWithVariants;
         return product;
       });
-      console.log("products after removing variant: ", products);
+
       const allVendors = [
         "akg", "audio-technica", "chauvet", "electro-voice", "furman", "hosa", "k&m", "neumann", "neutrik", "presonus", "pioneer", "radial", "sennheiser", "shure", "zoom"
       ];
-      // loop through products, to product.node.tags
-      // check if each element is equal to product.node.tags ["audio-technica", "headphones", "deals"]
-      // output vendorKeys = ["audio-technica"]
-     
-      // const vendorKeys = products.map((product) => {
-      //   return product.node.tags.filter((tag) => {
-      //     console.log("allVendors.indexOf(tag) !== -1: ", allVendors.indexOf(tag) !== -1);
-      //     return allVendors.indexOf(tag) !== -1;
-      //   })
-        
-      // });
-      const vendorKeys = products.map((product) => {
-        const filterA = product.node.tags.filter((tag) => {
-          return allVendors.includes(tag);
-        });
-        console.log("filterA: ", filterA);
-        return vendorKeys.includes(filterA) ? vendorKeys : vendorKeys.concat([filterA]).sort();
-      });
       
-        // const found = product.node.tags.some(el => allVendors.includes(el));
-        // console.log("found: ", found);
-     
-
-      // const vendorKeys = products.reduce((newVendorArray, current) => {
-      //   let tag = allVendors.filter((el) => {
-      //     return current.node.tags.includes(el))
-      //   });
-      //   console.log("tag: ", tag);
-      //   return newVendorArray.includes(tag) ? newVendorArray : newVendorArray.concat([tag]).sort()
-      // }, []);
-      console.log("vendorKeys: ", vendorKeys);
-      
-
-      // Searches for vendor to use as keys in productsList
-      // const vendorKeys = products.reduce((allProducts, current) => {
-      //   return allProducts.includes(current.node.vendor) ? allProducts : allProducts.concat([current.node.vendor]).sort()
-      // }, []);
-    
-      // Makes products array from vendor keys
-      // vendorKeys.map((vendor) => {
-      //   console.log("vendor: ", vendor);
-      //   const filteredArray = products.filter((product) => {
-      //     console.log("product: ", product);
-
-      //     return product.node.tags.filter((tag) => {
-      //       console.log("tag: ", tag);
-      //       return tag === vendor;
-      //     })
-      //   })
-      //     // .sort((first, second) => {
-      //     //   let a = first.node.title;
-      //     //   let b = second.node.title;
-      //     //   return a === b ? 0 : a > b ? 1 : -1;
-      //     // }
-      //   // );
-      //   console.log("filteredArray: ", filteredArray);
-      //   productsList[vendor] = filteredArray;    
-      //   console.log("productsList: ", productsList);  
-      //   return productsList;
-      // });  
-
-      
+      // Searches for common tags between current.node.tags and allVendors arrays
+      // Sorts product into each vendor category
+      products.reduce((newVendorArray, current) => {
+          const similar = current.node.tags.filter((tag) => {
+            return allVendors.includes(tag);
+          }).toString();
+          return newVendorArray.includes(similar) ? newVendorArray : newVendorArray.concat([similar]).sort()
+        }, []).map((vendor) => {
+          const filteredArray = products.filter((product) => {
+            return product.node.tags.includes(vendor);  
+          }).sort((first, second) => {
+              let a = first.node.title;
+              let b = second.node.title;
+              return a === b ? 0 : a > b ? 1 : -1;
+          });
+          productsList[vendor] = filteredArray;    
+          return productsList;
+        });  
       return {
         productsList
       };   
@@ -133,13 +90,13 @@ class ProductResults extends React.Component {
     return null;
   }
 
-  // componentDidMount() {
-  //   const firstProduct = (Object.values(this.state.productsList)[0])[0];
-  //   this.setState({
-  //     productToDisplay: firstProduct,
-  //     productId: firstProduct.node.id
-  //   })
-  // }
+  componentDidMount() {
+    const firstProduct = (Object.values(this.state.productsList)[0])[0];
+    this.setState({
+      productToDisplay: firstProduct,
+      productId: firstProduct.node.id
+    });
+  }
 
   handleProductDetails = (id, product) => {
     this.setState({
