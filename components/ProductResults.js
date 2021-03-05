@@ -9,7 +9,7 @@ class ProductResults extends React.Component {
     this.state = {
       productsList: {},
       productToDisplay: {},
-      productId: ""
+      productId: "",
     }
   }
 
@@ -68,21 +68,21 @@ class ProductResults extends React.Component {
       // Searches for common tags between current.node.tags and allVendors arrays
       // Sorts product into each vendor category
       products.reduce((newVendorArray, current) => {
-          const similar = current.node.tags.filter((tag) => {
-            return allVendors.includes(tag);
-          }).toString();
-          return newVendorArray.includes(similar) ? newVendorArray : newVendorArray.concat([similar]).sort()
-        }, []).map((vendor) => {
-          const filteredArray = products.filter((product) => {
-            return product.node.tags.includes(vendor);  
-          }).sort((first, second) => {
-              let a = first.node.title;
-              let b = second.node.title;
-              return a === b ? 0 : a > b ? 1 : -1;
-          });
-          productsList[vendor] = filteredArray;    
-          return productsList;
-        });  
+        const similarTag = current.node.tags.filter((tag) => {
+          return allVendors.includes(tag);
+        }).toString();
+        return newVendorArray.includes(similarTag) ? newVendorArray : newVendorArray.concat([similarTag]).sort()
+      }, []).map((vendor) => {
+        const filteredArray = products.filter((product) => {
+          return product.node.tags.includes(vendor);  
+        }).sort((first, second) => {
+            let a = first.node.title;
+            let b = second.node.title;
+            return a === b ? 0 : a > b ? 1 : -1;
+        });
+        productsList[vendor] = filteredArray;    
+        return productsList;
+      }); 
       return {
         productsList
       };   
@@ -121,8 +121,17 @@ class ProductResults extends React.Component {
                       renderItem={(value) => {
                         const {id, title} = value.node;
                         const media = <Thumbnail
-                          source={value.node.images.edges[0].node.originalSrc}
-                          size="small"
+                          // source={value.node.images.edges[0].node.originalSrc}
+                          source={
+                            !value.node.hasOnlyDefaultVariant
+                            ? (value.node.images.edges.filter((image) => {
+                              return image.node.altText === value.node.variants.edges[0].node.title;
+                              }))[0].node.originalSrc
+                            : value.node.images.edges[0].node.originalSrc    
+                          }
+                          
+                          // source={source}
+                          size="large"
                           alt={value.node.images.edges[0].node.altText}  
                         />;  
                         const price = value.node.variants.edges[0].node.price;

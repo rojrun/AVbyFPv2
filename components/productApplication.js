@@ -51,20 +51,23 @@ class ProductApplication extends React.Component {
                     Object.values(application)[0].map((links, secondIndex) => {
                       return (
                         <Card.Section key={secondIndex}>
-                          <Link
+                          <Button 
+                            plain
+                            textAlign="left"
                             key={secondIndex}
                             onClick={() => {this.showSubLinks(links, firstIndex, secondIndex)}}
                           >
                             {links.topLevel}
-                          </Link>
+                          </Button>
                           {
                             links.subLink && (links.subLink === this.state.subLinkToShow)
-                            ? <Stack distribution="center">
+                            ? <Stack distribution="right">
                                 <ButtonGroup>
                                   {
                                     links.subLink.map((subLink, index) => {
                                       return (
                                         <Button
+                                          plain
                                           key={index}
                                           onClick={() => {this.redirectToProductResults(subLink)}}
                                         >
