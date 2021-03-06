@@ -119,18 +119,22 @@ class ProductResults extends React.Component {
                       items={values}
                       totalItemsCount={values.length}
                       renderItem={(value) => {
+                        // if (!value.node.hasOnlyDefaultVariant) {
+                        //   let source = value.node.images.edges.filter((image) => {
+                        //     const altText = image.node.altText;
+                        //     const title = value.node.variants.edges[0].node.title;
+                        //     return altText === title;
+                        //   });
+                        //   if (!source.length) {
+                        //     source = value.node.images.edges[0].node.originalSrc;
+                        //   }
+                        // } else {
+                        //   source = value.node.images.edges[0].node.originalSrc;
+                        // }   
+
                         const {id, title} = value.node;
                         const media = <Thumbnail
-                          // source={value.node.images.edges[0].node.originalSrc}
-                          source={
-                            !value.node.hasOnlyDefaultVariant
-                            ? (value.node.images.edges.filter((image) => {
-                              return image.node.altText === value.node.variants.edges[0].node.title;
-                              }))[0].node.originalSrc
-                            : value.node.images.edges[0].node.originalSrc    
-                          }
-                          
-                          // source={source}
+                          source={value.node.images.edges[0].node.originalSrc}
                           size="large"
                           alt={value.node.images.edges[0].node.altText}  
                         />;  
