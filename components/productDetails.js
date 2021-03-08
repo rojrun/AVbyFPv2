@@ -28,27 +28,25 @@ class ProductDetails extends React.Component {
         }, []);
         const variantTitle = variants[0];
         const images = props.productToDisplay.node.images.edges.filter((image) => {
-          return image.node.altText === variants[0];
+          return image.node.altText === variantTitle;
         });
-        const price = props.productToDisplay.node.variants.edges[0].node.price;
         return {
           productToDisplay: props.productToDisplay,
           productKey: props.productKey,
           variants,
           variantTitle,
           images,
-          price
-        }    
-      } else {  
-        return {
-          productToDisplay: props.productToDisplay,
-          productKey: props.productKey,
-          variants: null,
-          variantTitle: null,
-          images: props.productToDisplay.node.images.edges,
           price: props.productToDisplay.node.variants.edges[0].node.price
-        }
-      }  
+        }    
+      }
+      return {
+        productToDisplay: props.productToDisplay,
+        productKey: props.productKey,
+        variants: null,
+        variantTitle: null,
+        images: props.productToDisplay.node.images.edges,
+        price: props.productToDisplay.node.variants.edges[0].node.price
+      }
     }
     return null;
   }
@@ -194,48 +192,6 @@ class ProductDetails extends React.Component {
                   ]}
                   headings={[null, null]}
                 />
-                {/* <TextContainer>
-                  <table>
-                  <tbody>
-                  <tr >
-                  <td style={{textAlign: 'left'}}>Tranducer Type</td>
-                  <td>Dynamic neodymium magnet</td>
-                  </tr>
-                  <tr >
-                  <td style={{textAlign: 'left'}}>Driver size</td>
-                  <td>40 mm</td>
-                  </tr>
-                  <tr >
-                  <td style={{textAlign: 'left'}}>Voice Coil</td>
-                  <td>Copper-clad aluminum wire</td>
-                  </tr>
-                  <tr >
-                  <td style={{textAlign: 'left'}}>Sensitivity (1kHz)</td>
-                  <td>96 dB/mW</td>
-                  </tr>
-                  <tr >
-                  <td style={{textAlign: 'left'}}>Impedance (1kHz)</td>
-                  <td>47 Ohms</td>
-                  </tr>
-                  <tr >
-                  <td style={{textAlign: 'left'}}>Max. input power (1kHz)</td>
-                  <td>1300 mW</td>
-                  </tr>
-                  <tr >
-                  <td style={{textAlign: 'left'}}>Frequency range</td>
-                  <td>15 Hz - 22,000 kHz</td>
-                  </tr>
-                  <tr >
-                  <td style={{textAlign: 'left'}}>Net Weight (without cable)</td>
-                  <td>220 g (7.8 oz)</td>
-                  </tr>
-                  <tr >
-                  <td style={{textAlign: 'left'}}>Cable Length</td>
-                  <td>3.0 m (9.8'), straight, left-side exit</td>
-                  </tr>
-                  </tbody>
-                  </table>
-                </TextContainer> */}
               </Collapsible>
             </Stack>
           </Card.Section>
