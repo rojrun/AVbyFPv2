@@ -119,56 +119,18 @@ class ProductResults extends React.Component {
                       items={values}
                       totalItemsCount={values.length}
                       renderItem={(value) => {
-                        // if (!value.node.hasOnlyDefaultVariant) {
-                        //   let source = value.node.images.edges.filter((image) => {
-                        //     const altText = image.node.altText;
-                        //     const title = value.node.variants.edges[0].node.title;
-                        //     return altText === title;
-                        //   });
-                        //   if (!source.length) {
-                        //     source = value.node.images.edges[0].node.originalSrc;
-                        //   }
-                        // } else {
-                        //   source = value.node.images.edges[0].node.originalSrc;
-                        // }   
-
                         const {id, title} = value.node;
+                        const source = value.node.images.edges.filter((image) => {
+                          return image.node.altText === value.node.variants.edges[0].node.title;
+                        });
                         const media = <Thumbnail
                           source={
-                            // (!value.node.hasOnlyDefaultVariant)
-                            // ? [(value.node.images.edges.filter((image) => {
-                            //     // const altText = image.node.altText;
-                            //     // const title = value.node.variants.edges[0].node.title;
-                            //     // return altText === title;
-                            //     return value.node.variants.edges[0].node.title === image.node.altText;
-                            //   }))
-                            //   // (!source.length)
-                            //   // ? value.node.images.edges[0].node.originalSrc
-                            //   // : value.node.images.edges.filter((image) => {
-                            //   //     return value.node.variants.edges[0].node.title === image.node.altText;
-                            //   // })]  
-                            //   ? (value.node.images.edges.filter((image) => {
-                            //       return value.node.variants.edges[0].node.title === image.node.altText;
-                            //     }))  
-                            //   : value.node.images.edges[0].node.originalSrc  ]
-                            // : value.node.images.edges[0].node.originalSrc  
-
-                            () => {
-                              if (!value.node.hasOnlyDefaultVariant) {
-                                let source = value.node.images.edges.filter((image) => {
-                                  const altText = image.node.altText;
-                                  const title = value.node.variants.edges[0].node.title;
-                                  return altText === title;
-                                });
-                                if (!source.length) {
-                                  return source = value.node.images.edges[0].node.originalSrc;
-                                }
-                              } else {
-                                return source = value.node.images.edges[0].node.originalSrc;
-                              }   
-                            }
+                            !value.node.hasOnlyDefaultVariant
+                            ? !source.length
+                              ? value.node.images.edges[0].node.originalSrc
+                              : source[0].node.originalSrc  
+                            : value.node.images.edges[0].node.originalSrc  
                           }
-                          // source={value.node.images.edges[0].node.originalSrc}
                           size="large"
                           alt={value.node.images.edges[0].node.altText}  
                         />;  
