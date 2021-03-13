@@ -18,6 +18,9 @@ class ProductDetails extends React.Component {
       openSpecifications: false,
       openContents: false
     }
+    this.displayInfo = this.displayInfo.bind(this);
+    this.expandSection = this.expandSection.bind(this);
+    this.collapseSection = this.collapseSection.bind(this);
   }
 
   static getDerivedStateFromProps(props, state) {
@@ -65,8 +68,49 @@ class ProductDetails extends React.Component {
     });
   }
 
-  handleOpenSection = (section) => {
-    this.setState({[section]: !this.state[section]});
+  // handleOpenSection = (section) => {
+  //   this.setState({[section]: !this.state[section]});
+  // }
+
+  displayInfo(button) {
+    const controlElem = button.getAttribute("aria-controls");
+    const isExpanded = button.getAttribute("aria-expanded");
+    const element = document.getElementById(controlElem);
+    const plusIcon = button.getElementsByTagName("svg")[0];
+    const minusIcon = button.getElementsByTagName("svg")[1];
+    if (isExpanded === "false") {
+      plusIcon.style.display = "none";
+      minusIcon.style.display = "block"; 
+      expandSection(element);
+      button.setAttribute("aria-expanded", "true");
+    } else {
+      minusIcon.style.display = "none"; 
+      plusIcon.style.display = "block";
+      collapseSection(element);
+      button.setAttribute("aria-expanded", "false");
+    }  
+  }
+  expandSection(element) {
+    const sectionHeight = element.scrollHeight;
+    element.style.height = sectionHeight + "px";
+    element.addEventListener("transitioned", function(e) {
+      element.removeEventListener("transitioned", arguments.callee);
+      element.style.height = null;
+    });
+    element.setAttribute("aria-hidden", "false");
+  }
+  collapseSection(element) {
+    const sectionHeight = element.scrollHeight;
+    let elementTransition = element.style.transition;
+    element.style.transition = "";
+    requestAnimationFrame(function() {
+      element.style.height = sectionHeight + "px";
+      element.style.transition = elementTransition;
+      requestAnimationFrame(function() {
+        element.style.height = 0 + "px";
+      });
+    });
+    element.setAttribute("aria-hidden", "true");
   }
 
   render() {
@@ -99,9 +143,10 @@ class ProductDetails extends React.Component {
           }>
             <Slideshow images={this.state.images}/>
           </Card.Section>
+          <div dangerouslySetInnerHTML={{__html: this.state.productToDisplay.node.descriptionHtml}}></div>
           {/* {this.state.productToDisplay.node.descriptionHtml} */}
-          <Card.Section>
-            <Stack vertical>
+          {/* <Card.Section>
+            <Stack vertical={true}>
               <Button
                 onClick={() => this.handleOpenSection('openDescription')}
                 ariaExpanded={this.state.openDescription}
@@ -109,6 +154,7 @@ class ProductDetails extends React.Component {
                 fullWidth
                 plain
                 textAlign="left"
+                accessibilityLabel="Display product description"
               >
                 DESCRIPTION
               </Button>
@@ -222,7 +268,7 @@ class ProductDetails extends React.Component {
                 </TextContainer>
               </Collapsible>
             </Stack>
-          </Card.Section>   
+          </Card.Section>    */}
           <Card.Section title="What's in the Box">
             (pictures of contents)    
           </Card.Section>
