@@ -12,15 +12,8 @@ class ProductDetails extends React.Component {
       variants: [],
       variantTitle: "",
       images: [],
-      price: "",
-      openDescription: false,
-      openFeatures: false,
-      openSpecifications: false,
-      openContents: false
+      price: ""
     }
-    this.displayInfo = this.displayInfo.bind(this);
-    this.expandSection = this.expandSection.bind(this);
-    this.collapseSection = this.collapseSection.bind(this);
   }
 
   static getDerivedStateFromProps(props, state) {
@@ -54,6 +47,18 @@ class ProductDetails extends React.Component {
     return null;
   }
 
+  componentDidMount() {
+    document.querySelectorAll("button[ref=section]").forEach((button) => {
+      button.addEventListener("click", this.handleDisplaySection);
+    });
+  }
+
+  componentWillUnmount() {
+    document.querySelectorAll("button[ref=section]").forEach((button) => {
+      button.removeEventListener("click", this.handleDisplaySection);
+    });
+  }
+
   handleVariantDetails = (title) => {
     const images = this.state.productToDisplay.node.images.edges.filter((image) => {
       return image.node.altText === title;
@@ -68,29 +73,26 @@ class ProductDetails extends React.Component {
     });
   }
 
-  // handleOpenSection = (section) => {
-  //   this.setState({[section]: !this.state[section]});
-  // }
-
-  displayInfo(button) {
-    const controlElem = button.getAttribute("aria-controls");
-    const isExpanded = button.getAttribute("aria-expanded");
+  handleDisplaySection = (event) => {
+    const evt = event.currentTarget;
+    const controlElem = evt.getAttribute("aria-controls");
+    const isExpanded = evt.getAttribute("aria-expanded");
     const element = document.getElementById(controlElem);
-    const plusIcon = button.getElementsByTagName("svg")[0];
-    const minusIcon = button.getElementsByTagName("svg")[1];
+    const plusIcon = evt.getElementsByTagName("svg")[0];
+    const minusIcon = evt.getElementsByTagName("svg")[1];
     if (isExpanded === "false") {
       plusIcon.style.display = "none";
       minusIcon.style.display = "block"; 
-      expandSection(element);
-      button.setAttribute("aria-expanded", "true");
+      this.expandSection(element);
+      evt.setAttribute("aria-expanded", "true");
     } else {
       minusIcon.style.display = "none"; 
       plusIcon.style.display = "block";
-      collapseSection(element);
-      button.setAttribute("aria-expanded", "false");
+      this.collapseSection(element);
+      evt.setAttribute("aria-expanded", "false");
     }  
   }
-  expandSection(element) {
+  expandSection = (element) => {
     const sectionHeight = element.scrollHeight;
     element.style.height = sectionHeight + "px";
     element.addEventListener("transitioned", function(e) {
@@ -99,7 +101,7 @@ class ProductDetails extends React.Component {
     });
     element.setAttribute("aria-hidden", "false");
   }
-  collapseSection(element) {
+  collapseSection = (element) => {
     const sectionHeight = element.scrollHeight;
     let elementTransition = element.style.transition;
     element.style.transition = "";
@@ -144,131 +146,6 @@ class ProductDetails extends React.Component {
             <Slideshow images={this.state.images}/>
           </Card.Section>
           <div dangerouslySetInnerHTML={{__html: this.state.productToDisplay.node.descriptionHtml}}></div>
-          {/* {this.state.productToDisplay.node.descriptionHtml} */}
-          {/* <Card.Section>
-            <Stack vertical={true}>
-              <Button
-                onClick={() => this.handleOpenSection('openDescription')}
-                ariaExpanded={this.state.openDescription}
-                ariaControls="description"
-                fullWidth
-                plain
-                textAlign="left"
-                accessibilityLabel="Display product description"
-              >
-                DESCRIPTION
-              </Button>
-              <Collapsible
-                open={this.state.openDescription}
-                id="description"
-                transition={{duration: '500ms', timingFunction: 'ease-in-out'}}
-              >
-                <TextContainer>
-                  <p>
-                    The M-Series ATH-M30x professional monitor headphones combine modern engineering and high-quality materials to deliver a comfortable listening experience,
-                    with enhanced audio clarity and sound isolation. Tuned for highly detailed audio, with strong mid-range definition, these versatile monitoring headphones 
-                    are ideal in a variety of situations. Designed primarily for studio tracking and mixing, they offer added features for increased portability, making them a 
-                    great choice for field recording.
-                  </p>
-                </TextContainer>
-              </Collapsible>
-            </Stack>
-          </Card.Section>
-          <Card.Section>
-            <Stack vertical>
-              <Button
-                onClick={() => this.handleOpenSection('openFeatures')}
-                ariaExpanded={this.state.openFeatures}
-                ariaControls="features"
-                fullWidth
-                plain
-                textAlign="left"
-              >
-                FEATURES
-              </Button>
-              <Collapsible
-                open={this.state.openFeatures}
-                id="features"
-                transition={{duration: '500ms', timingFunction: 'ease-in-out'}}
-              >
-                <TextContainer>
-                  <ul>
-                    <li>Advanced build quality and engineering</li>
-                    <li>40 mm drivers with rare earth magnets and copper-clad aluminum wire voice coils</li>
-                    <li>Circumaural design contours around the ears for excellent sound isolation in loud environments</li>
-                    <li>Tuned for enhanced low-frequency performance</li>
-                    <li>Circumaural design contours around the ears for excellent sound isolation in loud environments</li>
-                    <li>Convenient single-side cable exit</li>
-                    <li>Collapsible for space-saving portability</li>
-                    <li>Designed to excel for studio tracking, mixing and field recording</li>
-                  </ul>
-                </TextContainer>
-              </Collapsible>
-            </Stack>
-          </Card.Section>
-          <Card.Section>
-            <Stack vertical>
-              <Button
-                onClick={() => this.handleOpenSection('openSpecifications')}
-                ariaExpanded={this.state.openSpecifications}
-                ariaControls="specifications"
-                fullWidth
-                plain
-                textAlign="left"
-              >
-                SPECIFICATIONS
-              </Button>
-              <Collapsible
-                open={this.state.openSpecifications}
-                id="specifications"
-                transition={{duration: '500ms', timingFunction: 'ease-in-out'}}
-              >
-                <DataTable
-                  columnContentTypes={['text', 'text']}
-                  rows={[
-                    ['Tranducer Type', 'Dynamic neodymium magnet'],
-                    ['Driver size', '40 mm'],
-                    ['Voice Coil', 'Copper-clad aluminum wire'],
-                    ['Sensitivity (1kHz)', '96 dB/mW'],
-                    ['Impedance (1kHz)', '47 Ohms'],
-                    ['Max. input power (1kHz)', '1300 mW'],
-                    ['Frequency range', '15 Hz - 22,000 kHz'],
-                    ['Net Weight (without cable)', '220 g (7.8 oz)'],
-                    ["Cable Length", "3.0 m (9.8'), straight, left-side exit"]
-                  ]}
-                  headings={[null, null]}
-                />
-              </Collapsible>
-            </Stack>
-          </Card.Section>
-          <Card.Section>
-            <Stack vertical>
-              <Button
-                onClick={() => this.handleOpenSection('openContents')}
-                ariaExpanded={this.state.openContents}
-                ariaControls="contents"
-                fullWidth
-                plain
-                textAlign="left"
-              >
-                CONTENTS
-              </Button>
-              <Collapsible
-                open={this.state.openContents}
-                id="contents"
-                transition={{duration: '500ms', timingFunction: 'ease-in-out'}}
-              >
-                <TextContainer>
-                  <ul>
-                    <li>1x Audio-Technica ATH-M30x Headphones</li>
-                    <li>1x 6.3 mm (1/4") screw-on adapter</li>
-                    <li>1x Protective Carrying Pouch</li>
-                    <li>1x Operator's Instructions</li>
-                  </ul>  
-                </TextContainer>
-              </Collapsible>
-            </Stack>
-          </Card.Section>    */}
           <Card.Section title="What's in the Box">
             (pictures of contents)    
           </Card.Section>
