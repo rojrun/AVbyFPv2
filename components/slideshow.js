@@ -11,33 +11,37 @@ const Slideshow = (props) => {
   const prevSlide = () => {
     setCurrent(current === 0 ? length - 1 : current - 1);
   };
+  const leftArrow = <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style={{fill:"none"}} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-chevron-left">
+    <polyline points="15 18 9 12 15 6"/>
+  </svg>;
+  const rightArrow = <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style={{fill:"none"}} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-chevron-right">
+    <polyline points="9 18 15 12 9 6"/>
+  </svg>;
   
   if (!Array.isArray(props.images) || length <= 0) {
     return null;
   }
 
   return (
-    <section style={{
+    <div style={{
       position:"relative",
       width: "100%",
       display:"flex",
       justifyContent:"center",
       alignItems:"center"
     }}>
-      <Button icon={ArrowLeftMinor} style={{position:"absolute !important", top:"50%", left:"0.5rem", width:"10rem !important", zIndex:"10", cursor:"pointer", userSelect:"none"}} onClick={prevSlide}></Button>
+      <Button icon={leftArrow} onClick={prevSlide}></Button>
       {
         props.images.map((image, index) => {
           return (
             <div className={index === current ? 'slide active' : 'slide'} key={index}>
-              {index === current && (
-                <img src={image.node.originalSrc}  style={{width: "100%"}}/>
-              )}
+              {index === current && (<img src={image.node.originalSrc} style={{width:"100%"}}/>)}
             </div>
           ); 
         })
       }
-      <Button icon={ArrowRightMinor} style={{position:"absolute !important", top:"50%", right:"0.5rem", width:"10rem !important", zIndex:"10", cursor:"pointer", userSelect:"none"}} onClick={nextSlide}></Button>
-    </section>
+      <Button icon={rightArrow} onClick={nextSlide}></Button>
+    </div>
   );
 }
 export default Slideshow;
