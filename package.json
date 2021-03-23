@@ -1,11 +1,11 @@
 {
   "name": "avbyfpv2",
   "version": "1.0.0",
-  "description": "",
+  "description": "An eCommerce app, using React and Node, to be integrated with Shopify.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "node server.js",
+    "dev": "node server.js & sass --watch scss/app.module.scss:css/app.css",
     "build": "next build",
     "start": "NODE_ENV=production node server.js"
   },
@@ -30,6 +30,7 @@
     "react": "^17.0.1",
     "react-apollo": "^3.1.5",
     "react-dom": "^17.0.1",
+    "sass": "^1.32.8",
     "store-js": "^2.0.4"
   }
 }
