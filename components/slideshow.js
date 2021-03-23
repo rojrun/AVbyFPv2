@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {Button} from '@shopify/polaris';
 import {ArrowLeftMinor, ArrowRightMinor} from '@shopify/polaris-icons';
+import '../scss/_slideshow.module.scss';
 
 const Slideshow = (props) => {
   const [current, setCurrent] = useState(0);
@@ -23,13 +24,7 @@ const Slideshow = (props) => {
   }
 
   return (
-    <div style={{
-      position:"relative",
-      width: "100%",
-      display:"flex",
-      justifyContent:"center",
-      alignItems:"center"
-    }}>
+    <div className="slideshow">
       <Button icon={leftArrow} onClick={prevSlide}></Button>
       {
         props.images.map((image, index) => {
@@ -45,13 +40,3 @@ const Slideshow = (props) => {
   );
 }
 export default Slideshow;
-
-// .slide {
-//   opacity: 0;
-//   transition-duration: 1s ease;
-// }
-// .slide.active {
-//   opacity: 1;
-//   transition-duration: 1s;
-//   transform: ScalarLeafsRule(1.08);
-// }

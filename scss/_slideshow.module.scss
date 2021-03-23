@@ -1,0 +1,35 @@
+.slideshow {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  button {
+    position: absolute;
+    top: 50%; 
+    background: transparent;
+    border: none;
+    box-shadow: none;
+  }
+  
+  button:first-child {
+    left: 0;
+  }
+
+  div:nth-child(2) {
+    .slide {
+      opacity: 0;
+      transition-duration: 1s ease;
+    }
+    .slide.active {
+      opacity: 1;
+      transition-duration: 1s ease;
+      transform: ScalarLeafsRule(1.08);
+    }
+  } 
+
+  button:last-child {
+    right: 0;
+  }
+}

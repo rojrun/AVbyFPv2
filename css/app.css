@@ -1,0 +1,31 @@
+.slideshow {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.slideshow button {
+  position: absolute;
+  top: 50%;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+.slideshow button:first-child {
+  left: 0;
+}
+.slideshow div:nth-child(2) .slide {
+  opacity: 0;
+  transition-duration: 1s ease;
+}
+.slideshow div:nth-child(2) .slide.active {
+  opacity: 1;
+  transition-duration: 1s ease;
+  transform: ScalarLeafsRule(1.08);
+}
+.slideshow button:last-child {
+  right: 0;
+}
+
+/*# sourceMappingURL=app.css.map */
