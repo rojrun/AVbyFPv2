@@ -1,6 +1,7 @@
 import React from 'react';
 import {Button, ButtonGroup, Card, Collapsible, DataTable, Layout, Stack, TextContainer, TextStyle} from '@shopify/polaris';
 import Slideshow from '../components/slideshow.js';
+// import '../scss/_productDetails.module.scss';
 
 // Displays product information when product is clicked from ProductResults Component
 class ProductDetails extends React.Component {
@@ -145,12 +146,12 @@ class ProductDetails extends React.Component {
           }>
             <Slideshow images={this.state.images}/>
           </Card.Section>
-          <div dangerouslySetInnerHTML={{__html: this.state.productToDisplay.node.descriptionHtml}}></div>
+          <div className="rawData" dangerouslySetInnerHTML={{__html: this.state.productToDisplay.node.descriptionHtml}}></div>
           <Card.Section title="What's in the Box">
-            (pictures of contents)    
+            <Slideshow images={this.state.images}/>    
           </Card.Section>
           <Card.Section title="Accessories">
-            (ids of accessories)    
+            <Slideshow images={this.state.images}/>
           </Card.Section>
         </Card>       
       </Layout.Section>
