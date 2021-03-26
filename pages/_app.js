@@ -1,3 +1,4 @@
+import '../css/app.css';
 import React from 'react';
 import App from 'next/app';
 import Head from 'next/head';
@@ -9,7 +10,6 @@ import Cookies from 'js-cookie';
 import ClientRouter from '../components/ClientRouter';
 import ApolloClient from 'apollo-boost';
 import {ApolloProvider} from 'react-apollo';
-import '../css/app.css';
 
 const client = new ApolloClient({
   fetchOptions: {
