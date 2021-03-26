@@ -32,8 +32,34 @@
   border-top: 0.1rem solid grey;
   border-bottom: 0.1rem solid grey;
 }
-.rawData .Polaris-Card__Section .Polaris-Stack {
-  margin-top: -1rem;
+.rawData .Polaris-Card__Section > div:first-child {
+  margin-top: 0;
+}
+.rawData .Polaris-Card__Section > div:first-child div:first-child button {
+  padding: 0;
+  text-decoration: none;
+}
+.rawData .Polaris-Card__Section > div:first-child div:first-child button > span:first-child {
+  background: transparent;
+  margin-left: 0;
+  padding: 0;
+}
+.rawData .Polaris-Card__Section > div:first-child div:first-child button span:nth-child(2) {
+  width: 2em;
+}
+.rawData .Polaris-Card__Section > div:first-child div:nth-child(2) > div:first-child {
+  overflow: hidden;
+  height: 0;
+  transition: height 1s ease-in-out;
+}
+.rawData .Polaris-Card__Section > div:first-child div:nth-child(2) table th, .rawData .Polaris-Card__Section > div:first-child div:nth-child(2) table td {
+  border-bottom: 0.1rem solid grey;
+}
+.rawData .Polaris-Card__Section > div:first-child div:nth-child(2) table td {
+  white-space: normal !important;
+}
+.rawData .Polaris-Card__Section > div:first-child div:nth-child(2) table tr:last-child th, .rawData .Polaris-Card__Section > div:first-child div:nth-child(2) table tr:last-child td {
+  border-bottom: none;
 }
 
 /*# sourceMappingURL=app.css.map */

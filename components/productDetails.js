@@ -1,7 +1,9 @@
 import React from 'react';
 import {Button, ButtonGroup, Card, Collapsible, DataTable, Layout, Stack, TextContainer, TextStyle} from '@shopify/polaris';
 import Slideshow from '../components/slideshow.js';
-// import '../scss/_productDetails.module.scss';
+import PreviewCart from '../components/previewCart.js';
+import store from 'store-js';
+import '../scss/_productDetails.module.scss';
 
 // Displays product information when product is clicked from ProductResults Component
 class ProductDetails extends React.Component {
@@ -116,6 +118,23 @@ class ProductDetails extends React.Component {
     element.setAttribute("aria-hidden", "true");
   }
 
+  handleAddToCart = (product, variantTitle) => {
+    console.log("product: ", product);
+    console.log("variantTitle: ", variantTitle);
+    if (variantTitle === "null") {
+      // store.set('product', product);
+      <PreviewCart product={product} variant="null"/>
+    } else {
+      const productVariant = product.node.variants.edges.filter((variant) => {
+        return variant.node.title === variantTitle;
+      });
+      console.log("productVariant: ", productVariant);
+      // store.set('product', product);
+      // store.set('product_variant', productVariant);
+      <PreviewCart product={product} variant={productVariant}/>
+    }
+  }
+
   render() {
     return (
       <Layout.Section primary>
@@ -125,7 +144,7 @@ class ProductDetails extends React.Component {
               <ButtonGroup>
                 <TextStyle variation="strong">{this.state.variantTitle}&emsp;</TextStyle>
                 <TextStyle variation="strong">${this.state.price}&emsp;</TextStyle>
-                <Button monochrome outline>Buy</Button>
+                <Button monochrome outline onClick={() => {this.handleAddToCart(this.state.productToDisplay, this.state.variantTitle)}}>Buy</Button>
               </ButtonGroup>
             </Stack>
           </Card.Section>

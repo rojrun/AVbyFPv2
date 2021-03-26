@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, ButtonGroup, Card, Layout, Link, Stack} from '@shopify/polaris';
+import {Button, ButtonGroup, Card, Layout, Stack} from '@shopify/polaris';
 import store from 'store-js';
 import {Redirect} from '@shopify/app-bridge/actions';
 import {Context} from '@shopify/app-bridge-react';
