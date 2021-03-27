@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, ButtonGroup, Card, Collapsible, DataTable, Layout, Stack, TextContainer, TextStyle} from '@shopify/polaris';
+import {Button, ButtonGroup, Card, Layout, Stack, TextStyle, Modal} from '@shopify/polaris';
 import Slideshow from '../components/slideshow.js';
 import PreviewCart from '../components/previewCart.js';
 import store from 'store-js';
@@ -15,7 +15,8 @@ class ProductDetails extends React.Component {
       variants: [],
       variantTitle: "",
       images: [],
-      price: ""
+      price: "",
+      modalOpen: false
     }
   }
 
@@ -121,23 +122,29 @@ class ProductDetails extends React.Component {
   handleAddToCart = (product, variantTitle) => {
     console.log("product: ", product);
     console.log("variantTitle: ", variantTitle);
-    if (variantTitle === "null") {
-      // store.set('product', product);
-      <PreviewCart product={product} variant="null"/>
+    
+    if (!variantTitle) {
+      console.log("variantTitle === null");
+      store.set('cart', product);
     } else {
       const productVariant = product.node.variants.edges.filter((variant) => {
         return variant.node.title === variantTitle;
       });
       console.log("productVariant: ", productVariant);
-      // store.set('product', product);
-      // store.set('product_variant', productVariant);
-      <PreviewCart product={product} variant={productVariant}/>
+      store.set('cart', product);
+      store.set('product_variant', productVariant);
     }
+    this.setState({modalOpen: !this.state.modalOpen});
   }
 
-  render() {
+  handleCloseModal = () => {
+    this.setState({modalOpen: !this.state.modalOpen});
+  }
+
+  render() {   
     return (
       <Layout.Section primary>
+        <PreviewCart activator={this.handleAddToCart} open={this.state.modalOpen} onClose={this.handleCloseModal}/>
         <Card title={this.state.productToDisplay.node.title} key={this.state.productKey}>
           <Card.Section>
             <Stack distribution="trailing">
@@ -156,7 +163,7 @@ class ProductDetails extends React.Component {
                   ? <div style={{height: "4rem"}}></div>
                   : this.state.variants.map((title, index) => {
                     return (
-                      <Button outline key={index} onClick={() => this.handleVariantDetails(title)}>{title}</Button> 
+                      <Button outline key={index} onClick={() => {this.handleVariantDetails(title)}}>{title}</Button> 
                     );
                   }) 
                 }
@@ -167,10 +174,10 @@ class ProductDetails extends React.Component {
           </Card.Section>
           <div className="rawData" dangerouslySetInnerHTML={{__html: this.state.productToDisplay.node.descriptionHtml}}></div>
           <Card.Section title="What's in the Box">
-            <Slideshow images={this.state.images}/>    
+            {/* <Slideshow images={this.state.images}/>     */}
           </Card.Section>
           <Card.Section title="Accessories">
-            <Slideshow images={this.state.images}/>
+            {/* <Slideshow images={this.state.images}/> */}
           </Card.Section>
         </Card>       
       </Layout.Section>
