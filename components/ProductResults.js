@@ -11,6 +11,7 @@ class ProductResults extends React.Component {
       productToDisplay: {},
       productId: "",
     }
+    console.log("data: ", this.props.data);
   }
 
   static getDerivedStateFromProps(props, state) {
@@ -83,6 +84,7 @@ class ProductResults extends React.Component {
         productsList[vendor] = filteredArray;    
         return productsList;
       }); 
+      console.log("productsList: ", productsList);
       return {
         productsList
       };   

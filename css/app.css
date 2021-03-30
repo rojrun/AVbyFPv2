@@ -62,4 +62,8 @@
   border-bottom: none;
 }
 
+.Polaris-Modal__BodyWrapper .Polaris-Stack__Item {
+  flex: 1 1 18rem !important;
+}
+
 /*# sourceMappingURL=app.css.map */
