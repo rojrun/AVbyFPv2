@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, ButtonGroup, Card, Layout, Stack, TextStyle, Modal} from '@shopify/polaris';
+import {Button, ButtonGroup, Card, Layout, Stack, TextStyle} from '@shopify/polaris';
 import Slideshow from '../components/slideshow.js';
 import PreviewCart from '../components/previewCart.js';
 import store from 'store-js';
@@ -120,17 +120,21 @@ class ProductDetails extends React.Component {
   }
 
   handleAddToCart = (product, variantTitle) => {
-    console.log("product: ", product);
-    console.log("variantTitle: ", variantTitle);
+    const cart = [];
+    const quantityProd = {};
+    quantityProd.quantity = 1;
+    quantityProd.product = product;
+    
+    console.log("quantityProd: ", quantityProd);
     
     if (!variantTitle) {
-      console.log("variantTitle === null");
-      store.set('cart', product);
+      cart.push(quantityProd);
+      console.log("cart: ", cart);
+      store.set('cart', cart);
     } else {
       const productVariant = product.node.variants.edges.filter((variant) => {
         return variant.node.title === variantTitle;
       });
-      console.log("productVariant: ", productVariant);
       store.set('cart', product);
       store.set('product_variant', productVariant);
     }
@@ -144,15 +148,21 @@ class ProductDetails extends React.Component {
   render() {   
     return (
       <Layout.Section primary>
-        <PreviewCart activator={this.handleAddToCart} open={this.state.modalOpen} onClose={this.handleCloseModal}/>
+        <PreviewCart activator={this.handleAddToCart} open={this.state.modalOpen} onClose={this.handleCloseModal} 
+          product={this.state.productToDisplay} variant={this.state.variantTitle} image={this.state.images[0].node.originalSrc} price={this.state.price}
+        />
         <Card title={this.state.productToDisplay.node.title} key={this.state.productKey}>
           <Card.Section>
-            <Stack distribution="trailing">
-              <ButtonGroup>
-                <TextStyle variation="strong">{this.state.variantTitle}&emsp;</TextStyle>
-                <TextStyle variation="strong">${this.state.price}&emsp;</TextStyle>
+            <Stack alignment="baseline" distribution="equalSpacing">  
+              <Stack.Item>
+                <TextStyle variation="strong">{this.state.variantTitle}</TextStyle>
+              </Stack.Item>
+              <Stack.Item>
+                <TextStyle variation="strong">${this.state.price}</TextStyle>
+              </Stack.Item>
+              <Stack.Item>
                 <Button monochrome outline onClick={() => {this.handleAddToCart(this.state.productToDisplay, this.state.variantTitle)}}>Buy</Button>
-              </ButtonGroup>
+              </Stack.Item>
             </Stack>
           </Card.Section>
           <Card.Section title={
