@@ -5,8 +5,6 @@ import '../scss/_previewCart.module.scss';
 class PreviewCart extends React.Component {
   constructor(props) {
     super(props);
-    
-    console.log("props: ", this.props);
   }
 
   handleCheckout = () => {
