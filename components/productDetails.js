@@ -119,25 +119,59 @@ class ProductDetails extends React.Component {
     element.setAttribute("aria-hidden", "true");
   }
 
-  handleAddToCart = (product, variantTitle) => {
-    const cart = [];
-    const quantityProd = {};
-    quantityProd.quantity = 1;
-    quantityProd.product = product;
-    
-    console.log("quantityProd: ", quantityProd);
-    
-    if (!variantTitle) {
-      cart.push(quantityProd);
-      console.log("cart: ", cart);
-      store.set('cart', cart);
+  handleAddToCart = (product, variantTitle = null) => {
+    let cart = null;
+    if (!store.get('cart')) {
+      cart = [];
     } else {
-      const productVariant = product.node.variants.edges.filter((variant) => {
-        return variant.node.title === variantTitle;
-      });
-      store.set('cart', product);
-      store.set('product_variant', productVariant);
+      cart = store.get('cart');
     }
+
+    const quantityProduct = {};
+    quantityProduct.quantity = 1;
+    if (!variantTitle) {
+      quantityProduct.product = product;
+    } else {
+      // Restructure product by removing variants elements that are not equal to variantTitle
+      const productWithVariant = {};
+      Object.entries(product).map(([firstLayerKey, firstLayerValue]) => {
+        if (firstLayerKey !== "node") {
+          productWithVariant[firstLayerKey] = firstLayerValue;
+          return productWithVariant;
+        }
+
+        const nodeObj = {};
+        Object.entries(firstLayerValue).map(([secondLayerKey, secondLayerValue]) => {
+          if (secondLayerKey !== "variants") {
+            nodeObj[secondLayerKey] = secondLayerValue;
+            productWithVariant[firstLayerKey] = nodeObj;
+            return productWithVariant;
+          }
+
+          const variantsObj = {};
+          Object.entries(secondLayerValue).map(([thirdLayerKey, thirdLayerValue]) => {
+            if (thirdLayerKey !== "edges") {
+              variantsObj[thirdLayerKey] = thirdLayerValue;
+              nodeObj[secondLayerKey] = variantsObj;
+              productWithVariant[firstLayerKey] = nodeObj;
+              return productWithVariant;
+            }
+
+            const edgesArray = thirdLayerValue.filter((variant) => {
+              return variant.node.title === variantTitle;
+            });
+            variantsObj[thirdLayerKey] = edgesArray;
+            nodeObj[secondLayerKey] = variantsObj;
+            productWithVariant[firstLayerKey] = nodeObj;
+            return productWithVariant;
+          });
+        });
+      });
+      quantityProduct.product = productWithVariant;
+    }
+    cart.push(quantityProduct);
+    console.log("cart: ", cart);
+    store.set('cart', cart);
     this.setState({modalOpen: !this.state.modalOpen});
   }
 
@@ -146,11 +180,9 @@ class ProductDetails extends React.Component {
   }
 
   render() {   
+    const activator = <Button monochrome outline onClick={() => {this.handleAddToCart(this.state.productToDisplay, this.state.variantTitle)}}>Buy</Button>;
     return (
       <Layout.Section primary>
-        <PreviewCart activator={this.handleAddToCart} open={this.state.modalOpen} onClose={this.handleCloseModal} 
-          product={this.state.productToDisplay} variant={this.state.variantTitle} image={this.state.images[0].node.originalSrc} price={this.state.price}
-        />
         <Card title={this.state.productToDisplay.node.title} key={this.state.productKey}>
           <Card.Section>
             <Stack alignment="baseline" distribution="equalSpacing">  
@@ -161,7 +193,9 @@ class ProductDetails extends React.Component {
                 <TextStyle variation="strong">${this.state.price}</TextStyle>
               </Stack.Item>
               <Stack.Item>
-                <Button monochrome outline onClick={() => {this.handleAddToCart(this.state.productToDisplay, this.state.variantTitle)}}>Buy</Button>
+                <PreviewCart activator={activator} open={this.state.modalOpen} onClose={this.handleCloseModal} 
+                  product={this.state.productToDisplay} variant={this.state.variantTitle} image={this.state.images[0].node.originalSrc} price={this.state.price}
+                />
               </Stack.Item>
             </Stack>
           </Card.Section>
@@ -184,10 +218,10 @@ class ProductDetails extends React.Component {
           </Card.Section>
           <div className="rawData" dangerouslySetInnerHTML={{__html: this.state.productToDisplay.node.descriptionHtml}}></div>
           <Card.Section title="What's in the Box">
-            {/* <Slideshow images={this.state.images}/>     */}
+            Stuff
           </Card.Section>
           <Card.Section title="Accessories">
-            {/* <Slideshow images={this.state.images}/> */}
+            Stuff
           </Card.Section>
         </Card>       
       </Layout.Section>
