@@ -121,56 +121,81 @@ class ProductDetails extends React.Component {
 
   handleAddToCart = (product, variantTitle = null) => {
     let cart = null;
+    const quantityProduct = {};
+
+    // Check if cart exist in local storage
     if (!store.get('cart')) {
       cart = [];
-    } else {
-      cart = store.get('cart');
-    }
 
-    const quantityProduct = {};
-    quantityProduct.quantity = 1;
-    if (!variantTitle) {
-      quantityProduct.product = product;
-    } else {
-      // Restructure product by removing variants elements that are not equal to variantTitle
-      const productWithVariant = {};
-      Object.entries(product).map(([firstLayerKey, firstLayerValue]) => {
-        if (firstLayerKey !== "node") {
-          productWithVariant[firstLayerKey] = firstLayerValue;
-          return productWithVariant;
-        }
-
-        const nodeObj = {};
-        Object.entries(firstLayerValue).map(([secondLayerKey, secondLayerValue]) => {
-          if (secondLayerKey !== "variants") {
-            nodeObj[secondLayerKey] = secondLayerValue;
-            productWithVariant[firstLayerKey] = nodeObj;
+      // Check if product does not have a variant
+      if (!variantTitle) {
+        quantityProduct.product = product;  
+      } else {
+        // Restructure product by removing variants elements that are not equal to variantTitle
+        const productWithVariant = {};
+        Object.entries(product).map(([firstLayerKey, firstLayerValue]) => {
+          if (firstLayerKey !== "node") {
+            productWithVariant[firstLayerKey] = firstLayerValue;
             return productWithVariant;
           }
 
-          const variantsObj = {};
-          Object.entries(secondLayerValue).map(([thirdLayerKey, thirdLayerValue]) => {
-            if (thirdLayerKey !== "edges") {
-              variantsObj[thirdLayerKey] = thirdLayerValue;
-              nodeObj[secondLayerKey] = variantsObj;
+          const nodeObj = {};
+          Object.entries(firstLayerValue).map(([secondLayerKey, secondLayerValue]) => {
+            if (secondLayerKey !== "variants") {
+              nodeObj[secondLayerKey] = secondLayerValue;
               productWithVariant[firstLayerKey] = nodeObj;
               return productWithVariant;
             }
 
-            const edgesArray = thirdLayerValue.filter((variant) => {
-              return variant.node.title === variantTitle;
+            const variantsObj = {};
+            Object.entries(secondLayerValue).map(([thirdLayerKey, thirdLayerValue]) => {
+              if (thirdLayerKey !== "edges") {
+                variantsObj[thirdLayerKey] = thirdLayerValue;
+                nodeObj[secondLayerKey] = variantsObj;
+                productWithVariant[firstLayerKey] = nodeObj;
+                return productWithVariant;
+              }
+
+              const edgesArray = thirdLayerValue.filter((variant) => {
+                return variant.node.title === variantTitle;
+              });
+              variantsObj[thirdLayerKey] = edgesArray;
+              nodeObj[secondLayerKey] = variantsObj;
+              productWithVariant[firstLayerKey] = nodeObj;
+              return productWithVariant;
             });
-            variantsObj[thirdLayerKey] = edgesArray;
-            nodeObj[secondLayerKey] = variantsObj;
-            productWithVariant[firstLayerKey] = nodeObj;
-            return productWithVariant;
           });
         });
-      });
-      quantityProduct.product = productWithVariant;
+        quantityProduct.product = productWithVariant; 
+      }
+      quantityProduct.quantity = 1;
+      cart.push(quantityProduct);
+      console.log("cart: ", cart);
+    } else {
+      // Cart already existing in local storage
+      cart = store.get('cart');
+      console.log("cart: ", cart);
+      console.log("product: ", product);
+      // Check if product already exits in cart
+      // if true, add to quantity, if false push product to cart
+      // check if product is or not a variant 
+      if (cart.some(item => item.product.node.id === product.node.id)) {
+        console.log("product does exist");
+
+        // Check if variant exist
+        const variantIndex = cart.findIndex(item => item.product.node.variants.edges[0].node.title === variantTitle);
+        console.log("variantIndex: ", variantIndex);
+        if (variantIndex >= 0) {
+          cart[variantIndex].quantity++;
+        } else {
+          // productWithVariant
+        }
+
+      } else {
+        console.log("product does not exist");
+        cart.push(quantityProduct);
+      }
     }
-    cart.push(quantityProduct);
-    console.log("cart: ", cart);
     store.set('cart', cart);
     this.setState({modalOpen: !this.state.modalOpen});
   }
