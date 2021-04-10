@@ -9,7 +9,7 @@ class ProductResults extends React.Component {
     this.state = {
       productsList: {},
       productToDisplay: {},
-      productId: ""
+      productId: "",
     }
   }
 
@@ -60,22 +60,29 @@ class ProductResults extends React.Component {
         product = productWithVariants;
         return product;
       });
-      // Searches for vendor to use as keys in productsList
-      const vendorKeys = products.reduce((allProducts, current) => {
-        return allProducts.includes(current.node.vendor) ? allProducts : allProducts.concat([current.node.vendor]).sort()
-      }, []);
-    
-      // Makes products array from vendor keys
-      vendorKeys.map((vendor) => {
-        const filteredArray = products.filter((product) => product.node.vendor === vendor)
-          .sort((first, second) => {
+
+      const allVendors = [
+        "akg", "audio-technica", "chauvet", "electro-voice", "furman", "hosa", "k&m", "neumann", "neutrik", "presonus", "pioneer", "radial", "sennheiser", "shure", "zoom"
+      ];
+      
+      // Searches for common tags between current.node.tags and allVendors arrays
+      // Sorts product into each vendor category
+      products.reduce((newVendorArray, current) => {
+        const similarTag = current.node.tags.filter((tag) => {
+          return allVendors.includes(tag);
+        }).toString();
+        return newVendorArray.includes(similarTag) ? newVendorArray : newVendorArray.concat([similarTag]).sort()
+      }, []).map((vendor) => {
+        const filteredArray = products.filter((product) => {
+          return product.node.tags.includes(vendor);  
+        }).sort((first, second) => {
             let a = first.node.title;
             let b = second.node.title;
             return a === b ? 0 : a > b ? 1 : -1;
         });
-        productsList[vendor] = filteredArray;      
+        productsList[vendor] = filteredArray;    
         return productsList;
-      });  
+      }); 
       return {
         productsList
       };   
@@ -88,7 +95,7 @@ class ProductResults extends React.Component {
     this.setState({
       productToDisplay: firstProduct,
       productId: firstProduct.node.id
-    })
+    });
   }
 
   handleProductDetails = (id, product) => {
@@ -113,9 +120,18 @@ class ProductResults extends React.Component {
                       totalItemsCount={values.length}
                       renderItem={(value) => {
                         const {id, title} = value.node;
+                        const source = value.node.images.edges.filter((image) => {
+                          return image.node.altText === value.node.variants.edges[0].node.title;
+                        });
                         const media = <Thumbnail
-                          source={value.node.images.edges[0].node.originalSrc}
-                          size="small"
+                          source={
+                            !value.node.hasOnlyDefaultVariant
+                            ? !source.length
+                              ? value.node.images.edges[0].node.originalSrc
+                              : source[0].node.originalSrc  
+                            : value.node.images.edges[0].node.originalSrc  
+                          }
+                          size="large"
                           alt={value.node.images.edges[0].node.altText}  
                         />;  
                         const price = value.node.variants.edges[0].node.price;
