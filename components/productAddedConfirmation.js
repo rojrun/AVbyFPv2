@@ -1,14 +1,28 @@
 import React from 'react';
-import {Button, DisplayText, Heading, Modal, Stack, TextContainer, TextStyle} from '@shopify/polaris';
+import {DisplayText, Modal, Stack, TextContainer} from '@shopify/polaris';
+import {Redirect} from '@shopify/app-bridge/actions';
+import {Context} from '@shopify/app-bridge-react';
 import '../scss/_previewCart.module.scss';
 
-class PreviewCart extends React.Component {
+class ProductAddedConfirmation extends React.Component {
+  static contextType= Context;
   constructor(props) {
     super(props);
+    this.state = {
+      app: {}
+    }
   }
 
-  handleCheckout = () => {
-    console.log("checkout clicked");
+  componentDidMount() {
+    this.setState({app: this.context});
+  }
+
+  handleRedirectToCart = () => {
+    const redirect = Redirect.create(this.state.app);
+    redirect.dispatch(
+      Redirect.Action.APP,
+      '/cart',
+    );  
   }
 
   render() {
@@ -23,7 +37,7 @@ class PreviewCart extends React.Component {
         title="Added to your cart"
         primaryAction={{
           content: "View cart & checkout",
-          onAction: this.handleCheckout
+          onAction: this.handleRedirectToCart
         }}
       >
         <Modal.Section>
@@ -45,4 +59,4 @@ class PreviewCart extends React.Component {
     );
   }
 }
-export default PreviewCart;
+export default ProductAddedConfirmation;

@@ -1,7 +1,7 @@
 import React from 'react';
 import {Button, ButtonGroup, Card, Layout, Stack, TextStyle} from '@shopify/polaris';
 import Slideshow from '../components/slideshow.js';
-import PreviewCart from '../components/previewCart.js';
+import ProductAddedConfirmation from '../components/productAddedConfirmation.js';
 import store from 'store-js';
 import '../scss/_productDetails.module.scss';
 
@@ -210,7 +210,7 @@ class ProductDetails extends React.Component {
                 <TextStyle variation="strong">${this.state.price}</TextStyle>
               </Stack.Item>
               <Stack.Item>
-                <PreviewCart activator={activator} open={this.state.modalOpen} onClose={this.handleCloseModal} 
+                <ProductAddedConfirmation activator={activator} open={this.state.modalOpen} onClose={this.handleCloseModal} 
                   product={this.state.productToDisplay} variant={this.state.variantTitle} image={this.state.images[0].node.originalSrc} price={this.state.price}
                 />
               </Stack.Item>
