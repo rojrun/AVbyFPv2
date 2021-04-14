@@ -1,5 +1,5 @@
 import React from 'react';
-import {Card, Layout, ResourceItem, ResourceList, TextStyle, Thumbnail} from '@shopify/polaris';
+import {Card, DisplayText, Layout, ResourceItem, ResourceList, Thumbnail} from '@shopify/polaris';
 import ProductDetails from '../components/productDetails.js';
 
 // Child component from Project Page. Restructures raw data & dynamically categorizes products into groups by vendor.
@@ -143,8 +143,8 @@ class ProductResults extends React.Component {
                             accessibilityLabel={`View details for ${title}`}
                             onClick={() => this.handleProductDetails(id, value)}
                           >
-                            <TextStyle variation="strong">{title}</TextStyle>
-                            <p>${price}</p>
+                            <DisplayText size="medium" element="h3">{title}</DisplayText>
+                            <DisplayText size="small">${price}</DisplayText>
                           </ResourceItem>
                         );
                       }}
