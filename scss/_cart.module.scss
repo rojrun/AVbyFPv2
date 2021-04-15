@@ -1,0 +1,14 @@
+.Polaris-Stack {
+  .Polaris-Stack__Item {
+    max-width: 50% !important;
+    margin-left: 0 !important;
+
+    img {
+      width: 100%;
+    }
+
+    // p:not(:first-of-type) {
+    //   text-align: right;
+    // }
+  }
+}

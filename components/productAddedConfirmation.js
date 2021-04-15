@@ -2,7 +2,7 @@ import React from 'react';
 import {DisplayText, Modal, Stack, TextContainer} from '@shopify/polaris';
 import {Redirect} from '@shopify/app-bridge/actions';
 import {Context} from '@shopify/app-bridge-react';
-import '../scss/_previewCart.module.scss';
+import '../scss/_productAddedConfirmation.module.scss';
 
 class ProductAddedConfirmation extends React.Component {
   static contextType= Context;

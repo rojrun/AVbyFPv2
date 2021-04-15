@@ -178,7 +178,7 @@ class ProductDetails extends React.Component {
         cart[productIndex].quantity++;
       } else {
         const variantIndex = cart.findIndex(item => item.product.node.variants.edges[0].node.title === variantTitle);
-        if (variantIndex >= 0) {  /* if product variant exist */
+        if (variantIndex !== -1) {  /* if product variant exist */
           cart[variantIndex].quantity++;
         } else {
           lineItem.quantity = 1;
