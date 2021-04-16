@@ -66,11 +66,11 @@
   flex: 1 1 18rem !important;
 }
 
-.Polaris-Stack .Polaris-Stack__Item {
+#cart .Polaris-Stack .Polaris-Stack__Item {
   max-width: 50% !important;
   margin-left: 0 !important;
 }
-.Polaris-Stack .Polaris-Stack__Item img {
+#cart .Polaris-Stack .Polaris-Stack__Item img {
   width: 100%;
 }
 
