@@ -8,7 +8,7 @@ class Cart extends React.Component {
     super(props);
     this.state = {
       cart: [],
-      disableButton: false
+      disableAddButton: []
     }
   }
 
@@ -22,6 +22,10 @@ class Cart extends React.Component {
     if (cart[index].quantity < 1) {
       cart[index].quantity = 1;
     }
+    if (cart[index].quantity < cart[index].product.node.totalInventory) {
+      const disable = this.state.disableAddButton.indexOf(index);
+      this.setState({disableAddButton: (this.state.disableAddButton.splice(disable, 1) && this.state.disableAddButton)});
+    }
     this.setState({cart: cart});
     store.set('cart', this.state.cart);
   }
@@ -30,7 +34,9 @@ class Cart extends React.Component {
     const cart = this.state.cart;
     cart[index].quantity++;
     if (cart[index].quantity > cart[index].product.node.totalInventory) {
-      this.setState({disableButton: !this.state.disableButton});
+      this.setState(currentState => ({
+        disableAddButton: [...currentState.disableAddButton, index]
+      }));
       cart[index].quantity = cart[index].product.node.totalInventory;
       const warning = document.createElement("p");
       warning.textContent = "Your selection is exceeding inventory total.";
@@ -39,18 +45,31 @@ class Cart extends React.Component {
         document.getElementsByClassName("Polaris-TextStyle--variationNegative")[index].removeChild(warning);
       }, 4000);   
     }
+    this.setState({cart: cart});
     store.set('cart', this.state.cart);
   }
 
   removeLineItem = (index) => {
-    this.setState({cart: (this.state.cart.splice(index, 1) && this.state.cart)});
+    this.setState({
+      cart: (this.state.cart.splice(index, 1) && this.state.cart),
+      disableAddButton: []
+    });
     store.set('cart', this.state.cart);
   }
   
   render() {
+    console.log("state: ", this.state);
+    let totalItemCount = 0;
+    let item = "item";
+    this.state.cart.map((lineItem) => {
+      totalItemCount += lineItem.quantity;
+    });
+    if (totalItemCount > 1) {
+      item = "items";
+    }
     return (
       <div id="cart">
-        <Page title="Shopping Cart">
+        <Page title={`Shopping Cart | ${totalItemCount} ${item}`}>
           <Layout>
             <Layout.Section oneHalf>
               <Card>  
@@ -83,7 +102,7 @@ class Cart extends React.Component {
                             }
                             <br/>
                             <DisplayText size="small">${product.node.variants.edges[0].node.price}</DisplayText>
-                            <DisplayText size="small">Quantity:&nbsp;
+                            <DisplayText size="small">Quantity:&emsp;
                               <span>
                                 <Button
                                   id="subtractQuantity"
@@ -102,11 +121,17 @@ class Cart extends React.Component {
                                   icon={
                                     <svg xmlns="http://www.w3.org/2000/svg" height="16px" width="16px" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-plus"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                                   }
-                                  onClick={() => {!this.state.disableButton && this.addQuantity(index)}}
+                                  disabled={this.state.disableAddButton.includes(index)}
+                                  onClick={() => {this.addQuantity(index)}}
                                 ></Button>
                               </span>
                             </DisplayText>
                             <TextStyle variation="negative"></TextStyle>
+                            {
+                              quantity > 1
+                              ? <DisplayText size="small">Subtotal: ${ (product.node.variants.edges[0].node.price * quantity).toLocaleString("en", {useGrouping: false, minimumFractionDigits: 2}) }</DisplayText>
+                              : null
+                            }
                             <br/>
                             <Button
                               icon={
@@ -132,8 +157,13 @@ class Cart extends React.Component {
               </Card>
             </Layout.Section>
             <Layout.Section oneHalf>
-              <Card>
-
+              <Card title="Order Summary">
+                <Card.Section>
+                  <Stack>
+                    <DisplayText size="medium">Estimated Total</DisplayText>
+                    <DisplayText size="medium">${}</DisplayText>
+                  </Stack>
+                </Card.Section>
               </Card>
             </Layout.Section>
           </Layout>
