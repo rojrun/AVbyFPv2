@@ -1,7 +1,7 @@
 import React from 'react';
 import {Button, ButtonGroup, Card, Layout, Stack, TextStyle} from '@shopify/polaris';
 import Slideshow from '../components/slideshow.js';
-import PreviewCart from '../components/previewCart.js';
+import ProductAddedConfirmation from '../components/productAddedConfirmation.js';
 import store from 'store-js';
 import '../scss/_productDetails.module.scss';
 
@@ -96,6 +96,7 @@ class ProductDetails extends React.Component {
       evt.setAttribute("aria-expanded", "false");
     }  
   }
+
   expandSection = (element) => {
     const sectionHeight = element.scrollHeight;
     element.style.height = sectionHeight + "px";
@@ -105,6 +106,7 @@ class ProductDetails extends React.Component {
     });
     element.setAttribute("aria-hidden", "false");
   }
+
   collapseSection = (element) => {
     const sectionHeight = element.scrollHeight;
     let elementTransition = element.style.transition;
@@ -118,10 +120,8 @@ class ProductDetails extends React.Component {
     });
     element.setAttribute("aria-hidden", "true");
   }
-
-  handleAddToCart = (product, variantTitle = null) => {
-    this.setState({modalOpen: !this.state.modalOpen});
   
+  handleAddToCart = (product, variantTitle = null) => {
     // Check if cart exist in local storage
     let cart = [];
     if (store.get('cart')) {
@@ -175,21 +175,39 @@ class ProductDetails extends React.Component {
     if (cart.some(item => item.product.node.id === product.node.id)) {
       if (product.node.hasOnlyDefaultVariant) {  /* if product doesn't have variants */
         const productIndex = cart.findIndex(item => item.product.node.id === product.node.id);
-        cart[productIndex].quantity++;
+        this.checkTotalInventory(cart, productIndex);
       } else {
         const variantIndex = cart.findIndex(item => item.product.node.variants.edges[0].node.title === variantTitle);
-        if (variantIndex >= 0) {  /* if product variant exist */
-          cart[variantIndex].quantity++;
+        if (variantIndex !== -1) {  /* if product variant exist */
+          this.checkTotalInventory(cart, variantIndex);
         } else {
           lineItem.quantity = 1;
           cart.push(lineItem);
+          this.setState({modalOpen: !this.state.modalOpen});
         }    
       }  
     } else {
       lineItem.quantity = 1;
       cart.push(lineItem);
+      this.setState({modalOpen: !this.state.modalOpen});
     }
     store.set('cart', cart);
+  }
+
+  checkTotalInventory = (cart, index) => {
+    cart[index].quantity++;
+    if (cart[index].quantity > cart[index].product.node.totalInventory) {
+      cart[index].quantity = cart[index].product.node.totalInventory;
+      const warning = document.createElement("p");
+      warning.textContent = "Your selection is exceeding inventory total. Please select another product.";
+      document.getElementsByClassName("Polaris-TextStyle--variationNegative")[0].append(warning);
+      setTimeout(() => {
+        document.getElementsByClassName("Polaris-TextStyle--variationNegative")[0].removeChild(warning);
+      }, 4000);
+      return cart;
+    }
+    this.setState({modalOpen: !this.state.modalOpen});
+    return cart;
   }
 
   handleCloseModal = () => {
@@ -210,11 +228,12 @@ class ProductDetails extends React.Component {
                 <TextStyle variation="strong">${this.state.price}</TextStyle>
               </Stack.Item>
               <Stack.Item>
-                <PreviewCart activator={activator} open={this.state.modalOpen} onClose={this.handleCloseModal} 
+                <ProductAddedConfirmation activator={activator} open={this.state.modalOpen} onClose={this.handleCloseModal} 
                   product={this.state.productToDisplay} variant={this.state.variantTitle} image={this.state.images[0].node.originalSrc} price={this.state.price}
                 />
               </Stack.Item>
             </Stack>
+            <TextStyle variation="negative"></TextStyle>
           </Card.Section>
           <Card.Section title={
             <Stack distribution="center">
@@ -234,12 +253,12 @@ class ProductDetails extends React.Component {
             <Slideshow images={this.state.images}/>
           </Card.Section>
           <div className="rawData" dangerouslySetInnerHTML={{__html: this.state.productToDisplay.node.descriptionHtml}}></div>
-          <Card.Section title="What's in the Box">
+          {/* <Card.Section title="What's in the Box">
             Stuff
           </Card.Section>
           <Card.Section title="Accessories">
             Stuff
-          </Card.Section>
+          </Card.Section> */}
         </Card>       
       </Layout.Section>
     );   
