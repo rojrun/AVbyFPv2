@@ -1,0 +1,20 @@
+#cart {
+  .Polaris-Stack {
+    margin-left: 0;
+
+    .Polaris-Stack:nth-child(2) {
+      .Polaris-Stack__Item:nth-child(1) {
+        flex-basis: 100%;
+        flex: 2;
+      }
+
+      .Polaris-Stack__Item:nth-child(2) {
+        flex: 1;
+      }
+      
+      .Polaris-ButtonGroup {
+        flex-wrap: nowrap;
+      }
+    }
+  }
+}

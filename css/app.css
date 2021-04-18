@@ -74,4 +74,18 @@
   width: 100%;
 }
 
+#cart .Polaris-Stack {
+  margin-left: 0;
+}
+#cart .Polaris-Stack .Polaris-Stack:nth-child(2) .Polaris-Stack__Item:nth-child(1) {
+  flex-basis: 100%;
+  flex: 2;
+}
+#cart .Polaris-Stack .Polaris-Stack:nth-child(2) .Polaris-Stack__Item:nth-child(2) {
+  flex: 1;
+}
+#cart .Polaris-Stack .Polaris-Stack:nth-child(2) .Polaris-ButtonGroup {
+  flex-wrap: nowrap;
+}
+
 /*# sourceMappingURL=app.css.map */
