@@ -1,20 +1,22 @@
-#cart {
-  .Polaris-Stack {
-    margin-left: 0;
-
-    .Polaris-Stack:nth-child(2) {
-      .Polaris-Stack__Item:nth-child(1) {
-        flex-basis: 100%;
-        flex: 2;
+.Polaris-Card {
+  .Polaris-Card__Section {
+    .Polaris-Stack:nth-child(1) {
+      & > .Polaris-Stack__Item {
+        max-width: 50% !important;
+        margin-left: 0 !important;
+    
+        img {
+          width: 100%;
+        }
       }
 
       .Polaris-Stack__Item:nth-child(2) {
-        flex: 1;
-      }
-      
-      .Polaris-ButtonGroup {
-        flex-wrap: nowrap;
+        .Polaris-Stack {
+          & > .Polaris-Stack__Item {
+            max-width: 100% !important;
+          }
+        }
       }
     }
   }
-}
+}  

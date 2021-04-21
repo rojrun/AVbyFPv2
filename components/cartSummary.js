@@ -1,39 +1,53 @@
 import React from 'react';
-import {Button, Card, DisplayText, Page, Layout, Stack, TextStyle} from '@shopify/polaris';
+import {Button, Card, DisplayText, Layout, Stack} from '@shopify/polaris';
+import {Redirect} from '@shopify/app-bridge/actions';
+import {Context} from '@shopify/app-bridge-react';
+import '../scss/_cartSummary.module.scss';
 
 class CartSummary extends React.Component {
+  static contextType = Context;
   constructor(props) {
     super(props);
-    console.log("cartSummary props: ", this.props);
+    this.state = {
+      app: {}
+    }
   }
 
-  checkout = () => {
-    console.log("checkout clicked");
+  componentDidMount() {
+    this.setState({app: this.context});
+  }
+
+  handleRedirectToCheckout = () => {
+    const redirect = Redirect.create(this.state.app);
+    redirect.dispatch(
+      Redirect.Action.APP,
+      '/checkout'
+    );
   }
 
   render() {
     let estimatedTotal = 0;
-    this.state.cart.map((lineItem) => {
+    this.props.cart.map((lineItem) => {
       const {quantity, product} = lineItem;
       estimatedTotal += (quantity * product.node.variants.edges[0].node.price);
     });
     return (
-      <Layout.Section oneHalf>
+      <Layout.Section secondary>
         <Card title="Order Summary">
           <Card.Section>
             <Stack>
               <Stack.Item fill>
-                <DisplayText size="medium">Estimated Total</DisplayText>
+                <DisplayText size="small">Estimated Total</DisplayText>
               </Stack.Item>
               <Stack.Item>
-                <DisplayText size="medium">${estimatedTotal.toLocaleString("en", {useGrouping: false, minimumFractionDigits: 2})}</DisplayText>
+                <DisplayText size="small">${estimatedTotal.toLocaleString("en", {useGrouping: false, minimumFractionDigits: 2})}</DisplayText>
               </Stack.Item> 
             </Stack>
             <DisplayText size="small">(before tax/shipping)</DisplayText>
             <br/>
             <Button
               fullWidth
-              onClick={() => {this.checkout()}}
+              onClick={() => {this.handleRedirectToCheckout()}}
             >Checkout now</Button>
           </Card.Section>
         </Card>

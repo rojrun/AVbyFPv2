@@ -3,7 +3,6 @@ import store from 'store-js';
 import {Page, Layout} from '@shopify/polaris';
 import CartLineItems from '../components/cartLineItems.js';
 import CartSummary from '../components/cartSummary.js';
-import '../scss/_cart.module.scss';
 
 class Cart extends React.Component {
   constructor(props) {
@@ -31,14 +30,12 @@ class Cart extends React.Component {
       item = "items";
     }
     return (
-      <div id="cart">
-        <Page title={`Shopping Cart | ${totalItemCount} ${item}`}>
-          <Layout>
-            <CartLineItems cart={this.state.cart} updateParentState={this.updateParentState}/>
-            {/* <CartSummary cart={this.state.cart}/> */}
-          </Layout>
-        </Page>
-      </div>
+      <Page title={`Shopping Cart | ${totalItemCount} ${item}`}>
+        <Layout>
+          <CartLineItems cart={this.state.cart} updateParentState={this.updateParentState}/>
+          <CartSummary cart={this.state.cart}/>
+        </Layout>
+      </Page>
     );
   }
 }

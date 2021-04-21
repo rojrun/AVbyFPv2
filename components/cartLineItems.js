@@ -65,7 +65,7 @@ class CartLineItems extends React.Component {
 
   render() {
     return (
-      <Layout.Section oneHalf>
+      <Layout.Section primary>
         <Card>  
           {
             !this.state.cart
@@ -98,7 +98,7 @@ class CartLineItems extends React.Component {
                       <DisplayText size="small">${product.node.variants.edges[0].node.price}</DisplayText>
                       <Stack wrap={true} alignment="center">
                         <Stack.Item>
-                          <DisplayText size="small">Quantity:&emsp;</DisplayText>
+                          <DisplayText size="small">Quantity:</DisplayText>
                         </Stack.Item>
                         <Stack.Item>
                           <ButtonGroup>
@@ -121,31 +121,6 @@ class CartLineItems extends React.Component {
                           </ButtonGroup>
                         </Stack.Item>
                       </Stack>
-                      
-                      {/* <DisplayText size="small">Quantity:&emsp;
-                        <span>
-                          <Button
-                            id="subtractQuantity"
-                            icon={
-                              <svg xmlns="http://www.w3.org/2000/svg" height="16px" width="16px" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-minus"><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                            }
-                            onClick={() => this.subtractQuantity(index)}
-                          ></Button>
-                        </span>
-                        <span>
-                          &nbsp;{quantity}&nbsp;
-                        </span>
-                        <span>
-                          <Button
-                            id="addQuantity"
-                            icon={
-                              <svg xmlns="http://www.w3.org/2000/svg" height="16px" width="16px" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-plus"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                            }
-                            disabled={this.state.disableAddButton.includes(index)}
-                            onClick={() => {this.addQuantity(index)}}
-                          ></Button>
-                        </span>
-                      </DisplayText> */}
                       <TextStyle variation="negative"></TextStyle>
                       {
                         quantity > 1

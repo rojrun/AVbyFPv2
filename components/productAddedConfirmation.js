@@ -5,7 +5,7 @@ import {Context} from '@shopify/app-bridge-react';
 import '../scss/_productAddedConfirmation.module.scss';
 
 class ProductAddedConfirmation extends React.Component {
-  static contextType= Context;
+  static contextType = Context;
   constructor(props) {
     super(props);
     this.state = {
@@ -21,7 +21,7 @@ class ProductAddedConfirmation extends React.Component {
     const redirect = Redirect.create(this.state.app);
     redirect.dispatch(
       Redirect.Action.APP,
-      '/cart',
+      '/cart'
     );  
   }
 

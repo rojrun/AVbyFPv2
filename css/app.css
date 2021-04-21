@@ -66,26 +66,20 @@
   flex: 1 1 18rem !important;
 }
 
-#cart .Polaris-Stack .Polaris-Stack__Item {
+.Polaris-Card .Polaris-Card__Section .Polaris-Stack:nth-child(1) > .Polaris-Stack__Item {
   max-width: 50% !important;
   margin-left: 0 !important;
 }
-#cart .Polaris-Stack .Polaris-Stack__Item img {
+.Polaris-Card .Polaris-Card__Section .Polaris-Stack:nth-child(1) > .Polaris-Stack__Item img {
   width: 100%;
 }
+.Polaris-Card .Polaris-Card__Section .Polaris-Stack:nth-child(1) .Polaris-Stack__Item:nth-child(2) .Polaris-Stack > .Polaris-Stack__Item {
+  max-width: 100% !important;
+}
 
-#cart .Polaris-Stack {
-  margin-left: 0;
-}
-#cart .Polaris-Stack .Polaris-Stack:nth-child(2) .Polaris-Stack__Item:nth-child(1) {
-  flex-basis: 100%;
-  flex: 2;
-}
-#cart .Polaris-Stack .Polaris-Stack:nth-child(2) .Polaris-Stack__Item:nth-child(2) {
-  flex: 1;
-}
-#cart .Polaris-Stack .Polaris-Stack:nth-child(2) .Polaris-ButtonGroup {
-  flex-wrap: nowrap;
+.Polaris-Card .Polaris-Card__Section .Polaris-Stack .Polaris-Stack__Item.Polaris-Stack__Item--fill {
+  margin-left: 1.6rem !important;
+  max-width: 100% !important;
 }
 
 /*# sourceMappingURL=app.css.map */
