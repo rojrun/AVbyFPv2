@@ -1,5 +1,5 @@
 import React from 'react';
-import {Page, Layout, Stack} from '@shopify/polaris';
+import {Page, Layout} from '@shopify/polaris';
 import store from 'store-js';
 import CheckoutCustomerInfo from '../components/checkoutCustomerInfo.js';
 

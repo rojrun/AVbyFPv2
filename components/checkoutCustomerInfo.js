@@ -1,16 +1,39 @@
 import React from 'react';
-import {Button, Card, DisplayText, Form, FormLayout, Layout, Select, TextField} from '@shopify/polaris';
+import {Button, Card, Form, FormLayout, Layout, Select, TextField} from '@shopify/polaris';
 
 class CheckoutCustomerInfo extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      firstName: "",
+      lastName: "",
+      company: "",
+      shippingAdd1: "",
+      shippingAdd2: "",
+      city: "",
+      state: "",
+      zipCode: "",
+      phoneNumber: "",
+      email: "",
+      cardNumber: "",
+      mmYY: "",
+      securityCode: ""
+    }
   }
 
-  handleSubmit = () => {
+  handleSubmit = (event) => {
+    event.preventDefault();
+    console.log("handleSubmit", event);
+  }
 
+  handleChange = (name, event) => {
+    this.setState({
+      [name]: event
+    });
   }
 
   render() {
+    console.log("state: ", this.state);
     const stateOptions = [
       {label: '', value: ''},
       {label: 'Alabama', value: 'AL'},
@@ -75,28 +98,25 @@ class CheckoutCustomerInfo extends React.Component {
     ];
     return (
       <Layout.Section primary>
-        <Form onSubmit={this.handleSubmit} preventDefault={true}>
+        <Form name="customerCheckoutInfo" method="post" onSubmit={this.handleSubmit} autoComplete={true}>
           <Card title="Shipping Information">
             <Card.Section>
               <FormLayout>
                 <FormLayout.Group>
-                  <TextField label="First name" error="First name is required"/>
-                  <TextField label="Last name" error="Last name is required"/>
+                  <TextField label="First name" name="firstName" type="text"  value={this.state.firstName} onChange={event => this.handleChange('firstName', event)}/>
+                  <TextField label="Last name" name="lastName" type="text"  value={this.state.lastName} onChange={event => this.handleChange('lastName', event)}/>
                 </FormLayout.Group>
-                <TextField label="Company (optional)"/>
-                <TextField label="Shipping Address line 1" error="Shipping Address is required"/>
-                <TextField label="Shipping Address line 2"/>
+                <TextField label="Company (optional)" name="company" type="text" value={this.state.company} onChange={event => this.handleChange('company', event)}/>
+                <TextField label="Shipping Address line 1" name="shippingAdd1" type="text" error="Shipping Address is required" value={this.state.shippingAdd1} onChange={event => this.handleChange('shippingAdd1', event)}/>
+                <TextField label="Shipping Address line 2" name="shippingAdd2" type="text" value={this.state.shippingAdd2} onChange={event => this.handleChange('shippingAdd2', event)}/>
                 <FormLayout.Group>
-                  <TextField label="City" error="City is required"/>
-                  <Select
-                    label="State"
-                    options={stateOptions}
-                  />
-                  <TextField label="Zip code" error="Zip code is required"/>
+                  <TextField label="City" name="city" type="text" error="City is required" value={this.state.city} onChange={event => this.handleChange('city', event)}/>
+                  <Select label="State" name="state" type="text" options={stateOptions} value={this.state.state} onChange={event => this.handleChange('state', event)}/>
+                  <TextField label="Zip code" name="zipCode" type="text" error="Zip code is required" value={this.state.zipCode} onChange={event => this.handleChange('zipCode', event)}/>
                 </FormLayout.Group>
                 <FormLayout.Group>
-                  <TextField label="Phone number" error="Phone number is required"/>
-                  <TextField label="Email" error="Email is required"/>
+                  <TextField label="Phone number" name="phoneNumber" type="tel" error="Phone number is required" value={this.state.phoneNumber} onChange={event => this.handleChange('phoneNumber', event)}/>
+                  <TextField label="Email" name="email" type="email" error="Email is required" value={this.state.email} onChange={event => this.handleChange('email', event)}/>
                 </FormLayout.Group>
               </FormLayout>  
             </Card.Section>
@@ -104,10 +124,10 @@ class CheckoutCustomerInfo extends React.Component {
           <Card title="Billing Information">
             <Card.Section>
               <FormLayout>
+                <TextField label="Card number" name="cardNumber" type="text" error="Card number is required" value={this.state.cardNumber} onChange={event => this.handleChange('cardNumber', event)}/>
                 <FormLayout.Group>
-                  <TextField label="Card number" error="Card number is required"/>
-                  <TextField label="MM/YY" error="MM/YY is required"/>
-                  <TextField label="Security code" error="Security code is required"/>
+                  <TextField label="MM/YY" name="mmYY" type="text" error="MM/YY is required" value={this.state.mmYY} onChange={event => this.handleChange('mmYY', event)}/>
+                  <TextField label="Security code" name="securityCode" type="text" error="Security code is required" value={this.state.securityCode} onChange={event => this.handleChange('securityCode', event)}/>
                 </FormLayout.Group>
               </FormLayout>
               <br/>
