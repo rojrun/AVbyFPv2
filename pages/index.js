@@ -1,6 +1,6 @@
 import React from 'react';
 import {Layout, Page} from '@shopify/polaris';
-import ProductApplication from '../components/productApplication.js';
+import Application from '../components/products/application.js';
 
 const Index = () => {
   const applications = [
@@ -93,7 +93,7 @@ const Index = () => {
   return (
     <Page singleColumn title="Let us help You ...">
       <Layout>  
-        <ProductApplication applications={applications}/>
+        <Application applications={applications}/>
       </Layout> 
     </Page>
   ); 

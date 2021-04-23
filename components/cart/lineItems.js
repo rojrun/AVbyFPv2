@@ -1,9 +1,9 @@
 import React from 'react';
 import store from 'store-js';
 import {Button, ButtonGroup, Card, DisplayText, Layout, Stack, TextStyle} from '@shopify/polaris';
-import '../scss/_cartLineItems.module.scss';
+import '../../scss/cart/_lineItems.module.scss';
 
-class CartLineItems extends React.Component {
+class LineItems extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -25,7 +25,7 @@ class CartLineItems extends React.Component {
     if (cart[index].quantity < 1) {
       cart[index].quantity = 1;
     }
-    if (cart[index].quantity < cart[index].product.node.totalInventory) {
+    if (cart[index].quantity < cart[index].product.node.variants.edges[0].node.inventoryQuantity) {
       const disable = this.state.disableAddButton.indexOf(index);
       this.setState({disableAddButton: (this.state.disableAddButton.splice(disable, 1) && this.state.disableAddButton)});
     }
@@ -37,13 +37,17 @@ class CartLineItems extends React.Component {
   addQuantity = (index) => {
     const cart = this.state.cart;
     cart[index].quantity++;
-    if (cart[index].quantity > cart[index].product.node.totalInventory) {
+    const inventoryCount = cart[index].product.node.variants.edges[0].node.inventoryQuantity;
+    const productVariant = {};
+    if (cart[index].quantity > inventoryCount) {
+      productVariant.title = cart[index].product.node.title;
+      productVariant.variant = cart[index].product.node.variants.edges[0].node.title;
       this.setState(currentState => ({
-        disableAddButton: [...currentState.disableAddButton, index]
+        disableAddButton: [...currentState.disableAddButton, productVariant]
       }));
-      cart[index].quantity = cart[index].product.node.totalInventory;
+      cart[index].quantity = inventoryCount;
       const warning = document.createElement("p");
-      warning.textContent = "Your selection is exceeding inventory total.";
+      warning.textContent = "Your selection is exceeding inventory count.";
       document.getElementsByClassName("Polaris-TextStyle--variationNegative")[index].append(warning);
       setTimeout(() => {
         document.getElementsByClassName("Polaris-TextStyle--variationNegative")[index].removeChild(warning);
@@ -55,15 +59,33 @@ class CartLineItems extends React.Component {
   }
 
   removeLineItem = (index) => {
-    this.setState({
-      cart: (this.state.cart.splice(index, 1) && this.state.cart),
-      disableAddButton: []
-    });
-    store.set('cart', this.state.cart);
-    this.props.updateParentState();
+    // delete item from cart and disableAddButton
+    const cart = this.state.cart;
+    
+    
+    const productTitle = cart[index].product.node.title;
+    const productVariant = cart[index].product.node.variants.edges[0].node.title;
+    console.log('productTitle: ', productTitle);
+    console.log('productVariant: ', productVariant);
+    
+    // this.setState(currentState => {
+    //   const disable = currentState.disableAddButton.filter(item => item.title !== currentState.cart[index].product.node.title && item.variant !== currentState.cart[index].product.node.variants.edges[0].node.title);
+    //   const cart = currentState.cart.splice(index, 1) && currentState.cart; 
+    //   return {
+    //     cart: cart,
+    //     disableAddButton: disable
+    //   };
+    // });
+    // this.setState({
+    //   cart: (this.state.cart.splice(index, 1) && this.state.cart),
+    //   disableAddButton: []
+    // });
+    // store.set('cart', this.state.cart);
+    // this.props.updateParentState();
   }
 
   render() {
+    console.log("state: ", this.state);
     return (
       <Layout.Section primary>
         <Card>  
@@ -115,7 +137,11 @@ class CartLineItems extends React.Component {
                               icon={
                                 <svg xmlns="http://www.w3.org/2000/svg" height="16px" width="16px" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-plus"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                               }
-                              disabled={this.state.disableAddButton.includes(index)}
+                              disabled={
+                                this.state.disableAddButton.some((productVariant) => {
+                                  return (productVariant.title === product.node.title) && (productVariant.variant === product.node.variants.edges[0].node.title)
+                                })
+                              }
                               onClick={() => {this.addQuantity(index)}}
                             ></Button>
                           </ButtonGroup>
@@ -154,4 +180,4 @@ class CartLineItems extends React.Component {
     );
   }
 }
-export default CartLineItems;
+export default LineItems;

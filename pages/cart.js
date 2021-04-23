@@ -1,8 +1,8 @@
 import React from 'react';
 import store from 'store-js';
 import {Page, Layout} from '@shopify/polaris';
-import CartLineItems from '../components/cartLineItems.js';
-import CartSummary from '../components/cartSummary.js';
+import LineItems from '../components/cart/lineItems.js';
+import Summary from '../components/cart/summary.js';
 
 class Cart extends React.Component {
   constructor(props) {
@@ -32,8 +32,8 @@ class Cart extends React.Component {
     return (
       <Page title={`Shopping Cart | ${totalItemCount} ${item}`}>
         <Layout>
-          <CartLineItems cart={this.state.cart} updateParentState={this.updateParentState}/>
-          <CartSummary cart={this.state.cart}/>
+          <LineItems cart={this.state.cart} updateParentState={this.updateParentState}/>
+          <Summary cart={this.state.cart}/>
         </Layout>
       </Page>
     );

@@ -1,7 +1,7 @@
 import React from 'react';
 import {Page, Layout} from '@shopify/polaris';
 import store from 'store-js';
-import CheckoutCustomerInfo from '../components/checkoutCustomerInfo.js';
+import CustomerInfoForm from '../components/checkout/customerInfoForm.js';
 
 class Checkout extends React.Component {
   constructor(props) {
@@ -19,7 +19,7 @@ class Checkout extends React.Component {
     return (
       <Page title="Checkout">
         <Layout>
-          <CheckoutCustomerInfo/>
+          <CustomerInfoForm/>
         </Layout>
       </Page>
     );

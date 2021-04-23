@@ -2,9 +2,9 @@ import React from 'react';
 import {Button, Card, DisplayText, Layout, Stack} from '@shopify/polaris';
 import {Redirect} from '@shopify/app-bridge/actions';
 import {Context} from '@shopify/app-bridge-react';
-import '../scss/_cartSummary.module.scss';
+import '../../scss/cart/_summary.module.scss';
 
-class CartSummary extends React.Component {
+class Summary extends React.Component {
   static contextType = Context;
   constructor(props) {
     super(props);
@@ -45,14 +45,11 @@ class CartSummary extends React.Component {
             </Stack>
             <DisplayText size="small">(before tax/shipping)</DisplayText>
             <br/>
-            <Button
-              fullWidth
-              onClick={() => {this.handleRedirectToCheckout()}}
-            >Checkout now</Button>
+            <Button fullWidth onClick={() => {this.handleRedirectToCheckout()}}>Checkout now</Button>
           </Card.Section>
         </Card>
       </Layout.Section>
     );
   }
 }
-export default CartSummary;
+export default Summary;

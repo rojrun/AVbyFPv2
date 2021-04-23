@@ -1,7 +1,7 @@
 import React from 'react';
 import {Button, Card, Form, FormLayout, Layout, Select, TextField} from '@shopify/polaris';
 
-class CheckoutCustomerInfo extends React.Component {
+class CustomerInfoForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -139,4 +139,4 @@ class CheckoutCustomerInfo extends React.Component {
     );
   }
 }
-export default CheckoutCustomerInfo;
+export default CustomerInfoForm;
