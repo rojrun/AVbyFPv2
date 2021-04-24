@@ -47,7 +47,7 @@ class LineItems extends React.Component {
       }));
       cart[index].quantity = inventoryCount;
       const warning = document.createElement("p");
-      warning.textContent = "Your selection is exceeding inventory count.";
+      warning.textContent = "You have reached the maximum available limit.";
       document.getElementsByClassName("Polaris-TextStyle--variationNegative")[index].append(warning);
       setTimeout(() => {
         document.getElementsByClassName("Polaris-TextStyle--variationNegative")[index].removeChild(warning);
@@ -59,33 +59,22 @@ class LineItems extends React.Component {
   }
 
   removeLineItem = (index) => {
-    // delete item from cart and disableAddButton
     const cart = this.state.cart;
-    
-    
-    const productTitle = cart[index].product.node.title;
-    const productVariant = cart[index].product.node.variants.edges[0].node.title;
-    console.log('productTitle: ', productTitle);
-    console.log('productVariant: ', productVariant);
-    
-    // this.setState(currentState => {
-    //   const disable = currentState.disableAddButton.filter(item => item.title !== currentState.cart[index].product.node.title && item.variant !== currentState.cart[index].product.node.variants.edges[0].node.title);
-    //   const cart = currentState.cart.splice(index, 1) && currentState.cart; 
-    //   return {
-    //     cart: cart,
-    //     disableAddButton: disable
-    //   };
-    // });
-    // this.setState({
-    //   cart: (this.state.cart.splice(index, 1) && this.state.cart),
-    //   disableAddButton: []
-    // });
-    // store.set('cart', this.state.cart);
-    // this.props.updateParentState();
+    const disableAddButton = this.state.disableAddButton;
+    const productIndex = disableAddButton.findIndex(product => product.title === cart[index].product.node.title && product.variant === cart[index].product.node.variants.edges[0].node.title);
+    if (productIndex !== -1) {
+      disableAddButton.splice(productIndex, 1);
+    }
+    cart.splice(index, 1);
+    this.setState({
+      cart: cart,
+      disableAddButton: disableAddButton
+    });
+    store.set('cart', this.state.cart);
+    this.props.updateParentState();
   }
 
   render() {
-    console.log("state: ", this.state);
     return (
       <Layout.Section primary>
         <Card>  

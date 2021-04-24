@@ -15,6 +15,7 @@ class CustomerInfoForm extends React.Component {
       zipCode: "",
       phoneNumber: "",
       email: "",
+      nameOnCard: "",
       cardNumber: "",
       mmYY: "",
       securityCode: ""
@@ -22,11 +23,11 @@ class CustomerInfoForm extends React.Component {
   }
 
   handleSubmit = (event) => {
-    event.preventDefault();
     console.log("handleSubmit", event);
   }
 
   handleChange = (name, event) => {
+    console.log("event: ", event);
     this.setState({
       [name]: event
     });
@@ -98,7 +99,7 @@ class CustomerInfoForm extends React.Component {
     ];
     return (
       <Layout.Section primary>
-        <Form name="customerCheckoutInfo" method="post" onSubmit={this.handleSubmit} autoComplete={true}>
+        <Form name="customerCheckoutInfo" method="post" onSubmit={this.handleSubmit} autoComplete={true} preventDefault={true}>
           <Card title="Shipping Information">
             <Card.Section>
               <FormLayout>
@@ -124,7 +125,10 @@ class CustomerInfoForm extends React.Component {
           <Card title="Billing Information">
             <Card.Section>
               <FormLayout>
-                <TextField label="Card number" name="cardNumber" type="text" error="Card number is required" value={this.state.cardNumber} onChange={event => this.handleChange('cardNumber', event)}/>
+                <FormLayout.Group> 
+                  <TextField label="Name on card" name="nameOnCard" type="text" value={this.state.nameOnCard} onChange={event => this.handleChange('nameOnCard', event)}/>
+                  <TextField label="Card number" name="cardNumber" type="text" error="Card number is required" value={this.state.cardNumber} onChange={event => this.handleChange('cardNumber', event)}/>
+                </FormLayout.Group>
                 <FormLayout.Group>
                   <TextField label="MM/YY" name="mmYY" type="text" error="MM/YY is required" value={this.state.mmYY} onChange={event => this.handleChange('mmYY', event)}/>
                   <TextField label="Security code" name="securityCode" type="text" error="Security code is required" value={this.state.securityCode} onChange={event => this.handleChange('securityCode', event)}/>
