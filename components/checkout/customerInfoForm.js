@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, Card, Form, FormLayout, Layout, Select, TextField} from '@shopify/polaris';
+import {Button, Card, Form, FormLayout, InlineError, Layout, Select, TextField} from '@shopify/polaris';
 
 class CustomerInfoForm extends React.Component {
   constructor(props) {
@@ -18,25 +18,36 @@ class CustomerInfoForm extends React.Component {
       nameOnCard: "",
       cardNumber: "",
       mmYY: "",
-      securityCode: ""
+      securityCode: "",
+      errors: []
     }
   }
 
   handleChange = (value, id) => {
-    console.log("value: ", value);
-    console.log("id: ", id);
     this.setState({
       [id]: value
     });
   }
 
   isInvalid = (event) => {
-    console.log("event: ", event);
+    console.log("event: ", event.current.value);
+    if (!event.current.value) {
+      return true;
+    }
+    return false;
+  }
+
+  errorMessage = (isInvalid) => {
+    console.log('isInvalid: ', isInvalid);
+    const error = isInvalid 
+      ? 'First name is required'
+      : '';
+    return error;  
   }
 
   handleSubmit = (event) => {
     console.log("handleSubmit", event);
-    this.isInvalid(event);
+    // this.isInvalid(event);
   }
 
   render() {
@@ -110,20 +121,21 @@ class CustomerInfoForm extends React.Component {
             <Card.Section>
               <FormLayout>
                 <FormLayout.Group>
-                  <TextField label="First name" name="firstName" type="text" error={this.isInvalid} value={this.state.firstName} onChange={value => this.handleChange(value, 'firstName')}/>
-                  <TextField label="Last name" name="lastName" type="text" error={this.isInvalid} value={this.state.lastName} onChange={value => this.handleChange(value, 'lastName')}/>
+                  <TextField label="First name" name="firstName" id="firstName" type="text" error={this.isInvalid} value={this.state.firstName} onChange={value => this.handleChange(value, 'firstName')}/>
+                  <InlineError message={this.errorMessage(this.isInvalid)} fieldID="firstName"/>
+                  <TextField label="Last name" name="lastName" id="lastName" type="text" error={this.isInvalid} value={this.state.lastName} onChange={value => this.handleChange(value, 'lastName')}/>
                 </FormLayout.Group>
-                <TextField label="Company (optional)" name="company" type="text" value={this.state.company} onChange={value => this.handleChange(value, 'company')}/>
-                <TextField label="Shipping Address line 1" name="shippingAdd1" type="text" error={this.isInvalid} value={this.state.shippingAdd1} onChange={value => this.handleChange(value, 'shippingAdd1')}/>
-                <TextField label="Shipping Address line 2" name="shippingAdd2" type="text" value={this.state.shippingAdd2} onChange={value => this.handleChange(value, 'shippingAdd2')}/>
+                <TextField label="Company (optional)" name="company" id="company" type="text" value={this.state.company} onChange={value => this.handleChange(value, 'company')}/>
+                <TextField label="Shipping Address line 1" name="shippingAdd1" id="shippingAdd1" type="text" error={this.isInvalid} value={this.state.shippingAdd1} onChange={value => this.handleChange(value, 'shippingAdd1')}/>
+                <TextField label="Shipping Address line 2" name="shippingAdd2" id="shippingAdd2" type="text" value={this.state.shippingAdd2} onChange={value => this.handleChange(value, 'shippingAdd2')}/>
                 <FormLayout.Group>
-                  <TextField label="City" name="city" type="text" error={this.isInvalid} value={this.state.city} onChange={value => this.handleChange(value, 'city')}/>
-                  <Select label="State" name="state" type="text" options={stateOptions} error={this.isInvalid} value={this.state.state} onChange={value => this.handleChange(value, 'state')}/>
-                  <TextField label="Zip code" name="zipCode" type="text" error={this.isInvalid} value={this.state.zipCode} onChange={value => this.handleChange(value, 'zipCode')}/>
+                  <TextField label="City" name="city" id="city" type="text" error={this.isInvalid} value={this.state.city} onChange={value => this.handleChange(value, 'city')}/>
+                  <Select label="State" name="state" id="state" type="text" options={stateOptions} error={this.isInvalid} value={this.state.state} onChange={value => this.handleChange(value, 'state')}/>
+                  <TextField label="Zip code" name="zipCode" id="zipCode" type="text" error={this.isInvalid} value={this.state.zipCode} onChange={value => this.handleChange(value, 'zipCode')}/>
                 </FormLayout.Group>
                 <FormLayout.Group>
-                  <TextField label="Phone number" name="phoneNumber" type="tel" error={this.isInvalid} value={this.state.phoneNumber} onChange={value => this.handleChange(value, 'phoneNumber')}/>
-                  <TextField label="Email" name="email" type="email" error={this.isInvalid} value={this.state.email} onChange={value => this.handleChange(value, 'email')}/>
+                  <TextField label="Phone number" name="phoneNumber" id="phoneNumber" type="tel" error={this.isInvalid} value={this.state.phoneNumber} onChange={value => this.handleChange(value, 'phoneNumber')}/>
+                  <TextField label="Email" name="email" id="email" type="email" error={this.isInvalid} value={this.state.email} onChange={value => this.handleChange(value, 'email')}/>
                 </FormLayout.Group>
               </FormLayout>  
             </Card.Section>
@@ -132,12 +144,12 @@ class CustomerInfoForm extends React.Component {
             <Card.Section>
               <FormLayout>
                 <FormLayout.Group> 
-                  <TextField label="Name on card" name="nameOnCard" type="text" error={this.isInvalid} value={this.state.nameOnCard} onChange={value => this.handleChange(value, 'nameOnCard')}/>
-                  <TextField label="Card number" name="cardNumber" type="text" error={this.isInvalid} value={this.state.cardNumber} onChange={value => this.handleChange(value, 'cardNumber')}/>
+                  <TextField label="Name on card" name="nameOnCard" id="nameOnCard" type="text" error={this.isInvalid} value={this.state.nameOnCard} onChange={value => this.handleChange(value, 'nameOnCard')}/>
+                  <TextField label="Card number" name="cardNumber" id="cardNumber" type="text" error={this.isInvalid} value={this.state.cardNumber} onChange={value => this.handleChange(value, 'cardNumber')}/>
                 </FormLayout.Group>
                 <FormLayout.Group>
-                  <TextField label="MM/YY" name="mmYY" type="text" error={this.isInvalid} value={this.state.mmYY} onChange={value => this.handleChange(value, 'mmYY')}/>
-                  <TextField label="Security code" name="securityCode" type="text" error={this.isInvalid} value={this.state.securityCode} onChange={value => this.handleChange(value, 'securityCode')}/>
+                  <TextField label="MM/YY" name="mmYY" id="mmYY" type="text" error={this.isInvalid} value={this.state.mmYY} onChange={value => this.handleChange(value, 'mmYY')}/>
+                  <TextField label="Security code" name="securityCode" id="securityCode" type="text" error={this.isInvalid} value={this.state.securityCode} onChange={value => this.handleChange(value, 'securityCode')}/>
                 </FormLayout.Group>
               </FormLayout>
               <br/>
