@@ -2,6 +2,7 @@ import React from 'react';
 import {Page, Layout} from '@shopify/polaris';
 import store from 'store-js';
 import CustomerInfoForm from '../components/checkout/customerInfoForm.js';
+import Cart from '../components/checkout/cart.js';
 
 class Checkout extends React.Component {
   constructor(props) {
@@ -20,6 +21,7 @@ class Checkout extends React.Component {
       <Page title="Checkout">
         <Layout>
           <CustomerInfoForm/>
+          <Cart cart={this.state.cart}/>
         </Layout>
       </Page>
     );

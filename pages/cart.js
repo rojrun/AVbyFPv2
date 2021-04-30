@@ -22,12 +22,12 @@ class Cart extends React.Component {
   
   render() {
     let totalItemCount = 0;
-    let item = "item";
+    let item = "items";
     this.state.cart.map((lineItem) => {
       totalItemCount += lineItem.quantity;
     });
-    if (totalItemCount > 1) {
-      item = "items";
+    if (totalItemCount === 1) {
+      item = "item";
     }
     return (
       <Page title={`Shopping Cart | ${totalItemCount} ${item}`}>
