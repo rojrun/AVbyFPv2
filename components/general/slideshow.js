@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {Button} from '@shopify/polaris';
 import {ArrowLeftMinor, ArrowRightMinor} from '@shopify/polaris-icons';
-import '../scss/_slideshow.module.scss';
+import '../../scss/general/_slideshow.module.scss';
 
 const Slideshow = (props) => {
   const [current, setCurrent] = useState(0);

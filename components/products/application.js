@@ -5,7 +5,7 @@ import {Redirect} from '@shopify/app-bridge/actions';
 import {Context} from '@shopify/app-bridge-react';
 
 // Child component for index.js. Display menu links in home page.
-class ProductApplication extends React.Component {
+class Application extends React.Component {
   static contextType= Context;
   constructor(props) {
     super(props);
@@ -93,4 +93,4 @@ class ProductApplication extends React.Component {
     );
   }    
 }
-export default ProductApplication;
+export default Application;

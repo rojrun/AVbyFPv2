@@ -3,7 +3,7 @@ import {Query} from 'react-apollo';
 import {Card, Page} from '@shopify/polaris';
 import store from 'store-js';
 import GET_PRODUCTS_BY_TYPE from '../graphQL/getProductsByType.js';
-import ProductResults from '../components/productResults.js';
+import Results from '../components/products/results.js';
 
 const Products = () => {
   const tag = store.get('tag');
@@ -17,7 +17,7 @@ const Products = () => {
         if (data.products.edges.length) {
           return (
             <Page title={tag.toUpperCase()} fullWidth> 
-              <ProductResults data={data}/>
+              <Results data={data}/>
             </Page>
           );   
         } 

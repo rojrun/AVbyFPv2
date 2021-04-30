@@ -1,12 +1,12 @@
 import React from 'react';
 import {Button, ButtonGroup, Card, Layout, Stack, TextStyle} from '@shopify/polaris';
-import Slideshow from '../components/slideshow.js';
-import ProductAddedConfirmation from '../components/productAddedConfirmation.js';
+import Slideshow from '../general/slideshow.js';
+import ProductAddedConfirmation from './productAddedConfirmation.js';
 import store from 'store-js';
-import '../scss/_productDetails.module.scss';
+import '../../scss/products/_details.module.scss';
 
 // Displays product information when product is clicked from ProductResults Component
-class ProductDetails extends React.Component {
+class Details extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -220,7 +220,7 @@ class ProductDetails extends React.Component {
       <Layout.Section primary>
         <Card title={this.state.productToDisplay.node.title} key={this.state.productKey}>
           <Card.Section>
-            <Stack alignment="baseline" distribution="equalSpacing">  
+            <Stack alignment="baseline" distribution="fillEvenly">  
               <Stack.Item>
                 <TextStyle variation="strong">{this.state.variantTitle}</TextStyle>
               </Stack.Item>
@@ -264,4 +264,4 @@ class ProductDetails extends React.Component {
     );   
   }
 }
-export default ProductDetails;
+export default Details;

@@ -1,5 +1,5 @@
-@import "slideshow.module.scss";
-@import "productDetails.module.scss";
-@import "productAddedConfirmation.module.scss";
-@import "cartLineItems.module.scss";
-@import "cartSummary.module.scss";
+@import "./general/slideshow.module.scss";
+@import "./products/details.module.scss";
+@import "./products/productAddedConfirmation.module.scss";
+@import "./cart/lineItems.module.scss";
+@import "./cart/summary.module.scss";

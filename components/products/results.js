@@ -1,9 +1,9 @@
 import React from 'react';
 import {Card, DisplayText, Layout, ResourceItem, ResourceList, Thumbnail} from '@shopify/polaris';
-import ProductDetails from '../components/productDetails.js';
+import Details from './details.js';
 
 // Child component from Project Page. Restructures raw data & dynamically categorizes products into groups by vendor.
-class ProductResults extends React.Component {
+class Results extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -157,7 +157,7 @@ class ProductResults extends React.Component {
         </Layout.Section>
         {
           this.state.productToDisplay && this.state.productId
-          ? <ProductDetails productToDisplay={this.state.productToDisplay} productKey={this.state.productId}/>
+          ? <Details productToDisplay={this.state.productToDisplay} productKey={this.state.productId}/>
           : <Layout.Section>
               <Card title="Loading..."></Card>
             </Layout.Section>
@@ -166,4 +166,4 @@ class ProductResults extends React.Component {
     );
   }
 }
-export default ProductResults;
+export default Results;
