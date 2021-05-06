@@ -4,7 +4,16 @@ const MUTATE_CUSTOMER_CREATE = gql`
   mutation customerCreate($input: CustomerInput!) {
     customerCreate(input: $input) {
       customer {
-        addresses
+        addresses(first: 1) {
+          id
+          address1
+          address2
+          city
+          company
+          country
+          province
+          zip
+        }
         email
         firstName
         id
