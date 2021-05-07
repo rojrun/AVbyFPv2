@@ -42,7 +42,7 @@ class CustomerInfoForm extends React.Component {
   }
 
   // use try/catch when sending data
-  handleSubmit = (event, mutation) => {
+  handleSubmit = (event, customerCreate) => {
     Array.from(event.target.elements).map(element => {
       if (element.nodeName !== "BUTTON") {
         if (!element.value) {
@@ -58,7 +58,7 @@ class CustomerInfoForm extends React.Component {
         }
       }
     }); 
-    mutation({variables: {
+    customerCreate({variables: {
       input: {
         firstName: this.state.firstName,
         lastName: this.state.lastName,
@@ -75,70 +75,32 @@ class CustomerInfoForm extends React.Component {
         }
       }
     }});
+    // this.resetFields();
+  }
+
+  resetFields = () => {
+    this.setState({
+      firstName: "",
+      lastName: "",
+      company: "",
+      address1: "",
+      address2: "",
+      city: "",
+      state: "",
+      zip: "",
+      phone: "",
+      email: "",
+      nameOnCard: "",
+      cardNumber: "",
+      mmYY: "",
+      securityCode: "",
+      error: {}
+    });
   }
 
   render() {
+    console.log("props: ", this.props);
     const stateOptions = [
-      // {label: '', value: ''},
-      // {label: 'Alabama', value: 'AL'},
-      // {label: 'Alaska', value: 'AK'},
-      // {label: 'American Samoa', value: 'AS'},
-      // {label: 'Arizona', value: 'AZ'},
-      // {label: 'Arkansas', value: 'AR'},
-      // {label: 'California', value: 'CA'},
-      // {label: 'Colorado', value: 'CO'},
-      // {label: 'Connecticut', value: 'CT'},
-      // {label: 'Delaware', value: 'DE'},
-      // {label: 'District Of Columbia', value: 'DC'},
-      // {label: 'Federated States of Micronesia', value: 'FM'},
-      // {label: 'Florida', value: 'FL'},
-      // {label: 'Georgia', value: 'GA'},
-      // {label: 'Guam', value: 'GU'},
-      // {label: 'Hawaii', value: 'HI'},
-      // {label: 'Idaho', value: 'ID'},
-      // {label: 'Illinois', value: 'IL'},
-      // {label: 'Indiana', value: 'IN'},
-      // {label: 'Iowa', value: 'IA'},
-      // {label: 'Kansas', value: 'KS'},
-      // {label: 'Kentucky', value: 'KY'},
-      // {label: 'Louisiana', value: 'LA'},
-      // {label: 'Maine', value: 'ME'},
-      // {label: 'Marshall Islands', value: 'MH'},
-      // {label: 'Maryland', value: 'MD'},
-      // {label: 'Massachusetts', value: 'MA'},
-      // {label: 'Michigan', value: 'MI'},
-      // {label: 'Minnesota', value: 'MN'},
-      // {label: 'Mississippi', value: 'MS'},
-      // {label: 'Missouri', value: 'MO'},
-      // {label: 'Montana', value: 'MT'},
-      // {label: 'Nebraska', value: 'NE'},
-      // {label: 'Nevada', value: 'NV'},
-      // {label: 'New Hampshire', value: 'NH'},
-      // {label: 'New Jersey', value: 'NJ'},
-      // {label: 'New Mexico', value: 'NM'},
-      // {label: 'New York', value: 'NY'},
-      // {label: 'North Carolina', value: 'NC'},
-      // {label: 'North Dakota', value: 'ND'},
-      // {label: 'Northern Mariana Islands', value: 'MP'},
-      // {label: 'Ohio', value: 'OH'},
-      // {label: 'Oklahoma', value: 'OK'},
-      // {label: 'Oregon', value: 'OR'},
-      // {label: 'Palau', value: 'PW'},
-      // {label: 'Pennsylvania', value: 'PA'},
-      // {label: 'Puerto Rico', value: 'PR'},
-      // {label: 'Rhode Island', value: 'RI'},
-      // {label: 'South Carolina', value: 'SC'},
-      // {label: 'South Dakota', value: 'SD'},
-      // {label: 'Tennessee', value: 'TN'},
-      // {label: 'Texas', value: 'TX'},
-      // {label: 'Utah', value: 'UT'},
-      // {label: 'Vermont', value: 'VT'},
-      // {label: 'Virginia', value: 'VA'},
-      // {label: 'Virgin Islands', value: 'VI'},
-      // {label: 'Washington', value: 'WA'},
-      // {label: 'West Virginia', value: 'WV'},
-      // {label: 'Wisconsin', value: 'WI'},
-      // {label: 'Wyoming', value: 'WY'}
       {label: '', value: ''},
       {label: 'Alabama', value: 'Alabama'},
       {label: 'Alaska', value: 'Alaska'},
@@ -227,7 +189,8 @@ class CustomerInfoForm extends React.Component {
                         <TextField label="Zip code" name="zip" id="zip" type="text" pattern="^\d{5}([ \-]\d{4})?$" error={this.state.error.zip} value={this.state.zip} onChange={value => this.handleChange(value, 'zip')}/>
                       </FormLayout.Group>
                       <FormLayout.Group>
-                        <TextField label="Phone number" name="phone" id="phone" type="tel" pattern="^\([0-9]{3}\)[0-9]{3}-[0-9]{4}$" placeholder="(555)555-5555" error={this.state.error.phone} value={this.state.phone} onChange={value => this.handleChange(value, 'phone')}/>
+                        {/* <TextField label="Phone number" name="phone" id="phone" type="tel" pattern="^\([0-9]{3}\)[0-9]{3}-[0-9]{4}$" placeholder="(555)555-5555" error={this.state.error.phone} value={this.state.phone} onChange={value => this.handleChange(value, 'phone')}/> */}
+                        <TextField label="Phone number" name="phone" id="phone" type="tel" placeholder="1234567890" error={this.state.error.phone} value={this.state.phone} onChange={value => this.handleChange(value, 'phone')}/>
                         <TextField label="Email" name="email" id="email" type="email" pattern="^[a-zA-Z0-9._%+-]{1,64}@(?:[a-zA-Z0-9-]{1,63}\.){1,125}[a-zA-Z]{2,63}$" error={this.state.error.email} value={this.state.email} onChange={value => this.handleChange(value, 'email')}/>
                       </FormLayout.Group>
                     </FormLayout>  
@@ -235,7 +198,7 @@ class CustomerInfoForm extends React.Component {
                 </Card>
                 <Card title="Billing Information">
                   <Card.Section>
-                    <FormLayout>
+                    {/* <FormLayout>
                       <FormLayout.Group> 
                         <TextField label="Name on card" name="nameOnCard" id="nameOnCard" type="text" pattern="^[a-zA-Z\- ]+$" error={this.state.error.nameOnCard} value={this.state.nameOnCard} onChange={value => this.handleChange(value, 'nameOnCard')}/>
                         <TextField label="Card number" name="cardNumber" id="cardNumber" type="text" pattern="^\d{16}$" error={this.state.error.cardNumber} value={this.state.cardNumber} onChange={value => this.handleChange(value, 'cardNumber')}/>
@@ -244,9 +207,11 @@ class CustomerInfoForm extends React.Component {
                         <TextField label="MM/YY" name="mmYY" id="mmYY" type="text" pattern="^\d{4}$" error={this.state.error.mmYY} value={this.state.mmYY} onChange={value => this.handleChange(value, 'mmYY')}/>
                         <TextField label="Security code" name="securityCode" id="securityCode" type="text" pattern="^\d{3}$" error={this.state.error.securityCode} value={this.state.securityCode} onChange={value => this.handleChange(value, 'securityCode')}/>
                       </FormLayout.Group>
-                    </FormLayout>
+                    </FormLayout> */}
                     <br/>
                     <Button submit fullWidth>Place your order</Button>
+                    {loading && <p>Loading...</p>}
+                    {error && <p>Error. Please try again.</p>}
                   </Card.Section>
                 </Card>
               </Form>

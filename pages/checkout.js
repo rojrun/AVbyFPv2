@@ -20,7 +20,7 @@ class Checkout extends React.Component {
     return (
       <Page title="Checkout">
         <Layout>
-          <CustomerInfoForm/>
+          <CustomerInfoForm cart={this.state.cart}/>
           <Cart cart={this.state.cart}/>
         </Layout>
       </Page>

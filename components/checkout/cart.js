@@ -27,7 +27,7 @@ const Cart = (props) => {
               <DisplayText size="small">Subtotal ({totalItemCount} {item})</DisplayText>
             </Stack.Item>
             <Stack.Item>
-              <DisplayText size="small">${subTotal.toLocaleString("en", {useGrouping: false, minimumFractionDigits: 2})}</DisplayText>
+              <DisplayText size="small">${subTotal.toLocaleString("en-US", {useGrouping: false, maximumFractionDigits: 2, minimumFractionDigits: 2})}</DisplayText>
             </Stack.Item>
           </Stack>
           <Stack>
@@ -35,7 +35,7 @@ const Cart = (props) => {
               <DisplayText size="small">Shipping</DisplayText>
             </Stack.Item>
             <Stack.Item>
-              <DisplayText size="small">${shipping.toLocaleString("en", {useGrouping: false, minimumFractionDigits: 2})}</DisplayText>
+              <DisplayText size="small">${shipping.toLocaleString("en-US", {useGrouping: false, maximumFractionDigits: 2, minimumFractionDigits: 2})}</DisplayText>
             </Stack.Item>
           </Stack>
           <Stack>
@@ -43,7 +43,7 @@ const Cart = (props) => {
               <DisplayText size="small">Sales tax</DisplayText>
             </Stack.Item>
             <Stack.Item>
-              <DisplayText size="small">${salesTax.toLocaleString("en", {useGrouping: false, minimumFractionDigits: 2})}</DisplayText>
+              <DisplayText size="small">${salesTax.toLocaleString("en-US", {useGrouping: false, maximumFractionDigits: 2, minimumFractionDigits: 2})}</DisplayText>
             </Stack.Item>
           </Stack>
         </Card.Section>
@@ -53,7 +53,7 @@ const Cart = (props) => {
               <DisplayText size="medium">Order total</DisplayText>
             </Stack.Item>
             <Stack.Item>
-              <DisplayText size="medium">${orderTotal.toLocaleString("en", {useGrouping: false, minimumFractionDigits: 2})}</DisplayText>
+              <DisplayText size="medium">${orderTotal.toLocaleString("en-US", {useGrouping: false, maximumFractionDigits: 2, minimumFractionDigits: 2})}</DisplayText>
             </Stack.Item>
           </Stack>
         </Card.Section>
