@@ -1,7 +1,7 @@
 import React from 'react';
 import {Button, Card, Form, FormLayout, Layout, Select, TextField} from '@shopify/polaris';
 import {Mutation} from 'react-apollo';
-import MUTATE_CUSTOMER_CREATE from '../../graphQL/mutateCustomerCreate.js';
+import MUTATE_ORDER_CUSTOMER_CREATE from '../../graphQL/mutateOrderCustomerCreate.js';
 
 class CustomerInfoForm extends React.Component {
   constructor(props) {
@@ -42,7 +42,7 @@ class CustomerInfoForm extends React.Component {
   }
 
   // use try/catch when sending data
-  handleSubmit = (event, customerCreate) => {
+  handleSubmit = (event, customerAndOrder) => {
     Array.from(event.target.elements).map(element => {
       if (element.nodeName !== "BUTTON") {
         if (!element.value) {
@@ -58,8 +58,8 @@ class CustomerInfoForm extends React.Component {
         }
       }
     }); 
-    customerCreate({variables: {
-      input: {
+    customerAndOrder({variables: {
+      customer_input: {
         firstName: this.state.firstName,
         lastName: this.state.lastName,
         phone: this.state.phone,
@@ -73,6 +73,9 @@ class CustomerInfoForm extends React.Component {
           country: "United States",
           province: this.state.state
         }
+      },
+      order_input: {
+
       }
     }});
     // this.resetFields();
@@ -164,15 +167,15 @@ class CustomerInfoForm extends React.Component {
     ];
     return (
       <Layout.Section primary>
-        <Mutation mutation={MUTATE_CUSTOMER_CREATE}>
-          {(customerCreate, {loading, data, error, called, client}) => {
+        <Mutation mutation={MUTATE_ORDER_CUSTOMER_CREATE}>
+          {(customerAndOrder, {loading, data, error, called, client}) => {
             console.log("loading: ", loading);
             console.log("data: ", data);
             console.log("error: ", error);
             console.log("called: ", called);
             console.log("client: ", client);
             return (
-              <Form name="customerInfoForm" method="post" onSubmit={(event) => this.handleSubmit(event, customerCreate)} autoComplete={true} preventDefault={true}>
+              <Form name="customerInfoForm" method="post" onSubmit={(event) => this.handleSubmit(event, customerAndOrder)} autoComplete={true} preventDefault={true}>
                 <Card title="Customer Information">
                   <Card.Section>
                     <FormLayout>
