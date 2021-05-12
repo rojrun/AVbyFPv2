@@ -14,7 +14,7 @@ const port = parseInt(process.env.PORT, 10) || 3000;
 const dev = process.env.NODE_ENV !== 'production';
 const app = next({dev});
 const handle = app.getRequestHandler();
-const {SHOPIFY_API_SECRET_KEY, SHOPIFY_API_KEY, SHOPIFY_API_SCOPES} = process.env;
+const {SHOPIFY_API_SECRET_KEY, SHOPIFY_API_KEY} = process.env;
 
 app.prepare().then(() => {
     const server = new Koa();
@@ -24,7 +24,7 @@ app.prepare().then(() => {
       createShopifyAuth({
         apiKey: SHOPIFY_API_KEY,
         secret: SHOPIFY_API_SECRET_KEY,
-        scopes: SHOPIFY_API_SCOPES.split(","),
+        scopes: ['read_products', 'read_customers', 'write_customers', 'read_inventory', 'write_inventory', 'read_orders', 'write_orders', 'write_draft_orders', 'read_draft_orders'],
         async afterAuth(ctx) {
           const {shop, accessToken} = ctx.session;
           ctx.cookies.set('shopOrigin', shop, {
