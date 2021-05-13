@@ -36,7 +36,7 @@ app.prepare().then(() => {
         },
       }),
     );
-    server.use(graphQLProxy({version: ApiVersion.April21}));
+    server.use(graphQLProxy({version: ApiVersion.October20}));
     server.use(verifyRequest());
     server.use(async (ctx) => {
       await handle(ctx.req, ctx.res);
